@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import SearchForm from "./SearchForm";
+import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import "./DiaryForm.css";
 
@@ -27,6 +28,7 @@ const DiaryForm = ()=>{
                               image: item.photo.thumb,
                               brand_item_id: item.nix_item_id,
                               isBrand: "TRUE",
+                              qty:1
                               }
             setEntries((currentEntries)=>{
                 const copy = [...currentEntries, newEntry];
@@ -46,6 +48,7 @@ const DiaryForm = ()=>{
                                 calorie: Math.round(item.nf_calories),
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
+                                qty:1,
                                 }
             setEntries((currentEntries)=>{
                 const copy = [...currentEntries, newEntry];
@@ -57,27 +60,33 @@ const DiaryForm = ()=>{
         }
     }
 
-    // let entryline
+    const changeQty = (operation,index)=>{
 
-    // useEffect(()=>{
-    //     //Render diary entries if entries is not empty
-    //     if(entries[0]){
-            
-    //         entryline = entries.map((entry)=>{
-    //             return <li>
-    //                      {entry.food_name}  Calories:{entry.calorie} <img src={entry.image}></img>
-    //                    </li>
-    //         })
-    //     }
-    // },[entries]);
-    // console.log(entryline)
+        if(operation ==='inc'){
+            let new_qty = entries[index].qty + 1
+            setEntries((e)=>{
+                const copy = [...e]
+                copy[index].qty = new_qty
+                return copy
+            })
+        }
+        else if(operation ==='dec'){
+            let new_qty = entries[index].qty - 1 <=0 ? 1 : entries[index].qty - 1
+            setEntries((e)=>{
+                const copy = [...e]
+                copy[index].qty = new_qty
+                return copy
+            })
+        }
+    }
+
     return (
         <div>
             <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results}/>
             <ul>
-                {entries.map((entry)=>{
+                {entries.map((entry,idx)=>{
                 return <li className="Diary-entryline">
-                         {entry.food_name}  Calories:{entry.calorie} <img src={entry.image} className="Diary-image"></img>
+                         {entry.food_name}  Calories:{entry.calorie*entry.qty} <img src={entry.image} className="Diary-image"></img> <QuantitySelector changeQty={changeQty} index={idx} qty={entry.qty}/>
                        </li>
                 })}
             </ul>
