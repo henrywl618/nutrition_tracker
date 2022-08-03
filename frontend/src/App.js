@@ -1,11 +1,14 @@
 import logo from './logo.svg';
-import SearchBar from './SearchBar';
+import Diary from './Diary';
+import AppNavbar from './AppNavbar';
 import './App.css';
+
 
 function App() {
   return (
     <div className="App">
-      <SearchBar />
+      <AppNavbar />
+      <Diary />
     </div>
   );
 }
