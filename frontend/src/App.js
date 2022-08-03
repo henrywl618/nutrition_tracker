@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import SearchForm from './SearchForm';
+import Diary from './Diary';
 import AppNavbar from './AppNavbar';
 import './App.css';
 
@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <AppNavbar />
-      <SearchForm />
+      <Diary />
     </div>
   );
 }

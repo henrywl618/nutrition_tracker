@@ -11,7 +11,6 @@ const SearchBar = ({setResults, setInput, input})=>{
                 url: 'http://127.0.0.1:5000/search',
                 params:{query:e.target.value}
             })
-            console.log(response.data)
             setResults(response.data)
         }
 
