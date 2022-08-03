@@ -109,6 +109,13 @@ class Diary(db.Model):
     user = db.relationship('User', back_populates='diaries')
     entryline = db.relationship('DiaryEntryLine', back_populates="diary")
 
+    def serialize(self):
+        return{
+            'id':self.id,
+            'date':self.date,
+            'calorie_goal':self.calorie_goal,
+        }
+
 class DiaryEntryLine(db.Model):
     """Mapping Diary to EntryLine and an EntryLine to Fooditem"""
     __tablename__="diary_entryline"
@@ -132,6 +139,15 @@ class DiaryEntryLine(db.Model):
 
     fooditem = db.relationship('Fooditem')
     diary = db.relationship('Diary', back_populates="entryline")
+
+    def serialize(self):
+        return {
+            'id':self.fooditem.id,
+            'food_name':self.fooditem.food_name,
+            'calorie':self.fooditem.calorie,
+            'image':self.fooditem.image,
+            'quantity':self.quantity
+        }
 
 class Mealplan(db.Model):
     """An individual mealplan"""

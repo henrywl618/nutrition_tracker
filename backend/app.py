@@ -48,4 +48,23 @@ def get_nutrition(category):
         response = requests.post("https://trackapi.nutritionix.com/v2/natural/nutrients",
                                  headers=NUTRITIONIX_API_HEADERS,
                                  data={"query":query})
-        return jsonify(response.json()["foods"][0])    
+        return jsonify(response.json()["foods"][0])  
+
+@app.route("/diary", methods=['GET'])
+def view_diaries():
+    """ Returns a list of all the users diaries """
+    user_id = request.args.get("userId")
+    user = User.query.get_or_404(user_id)
+    diaries = user.diaries
+    serialized_diaries = [diary.serialize() for diary in diaries]
+    return jsonify(serialized_diaries)
+
+@app.route("/diary/<int:diary_id>", methods=["GET"])
+def view_diary(diary_id):
+    """ Return data for a specific diary """
+    diary = Diary.query.get_or_404(diary_id)
+    entries = diary.entryline
+    serialized_entries = [entry.serialize() for entry in entries]
+
+    return jsonify([{**diary.serialize(),'entries':serialized_entries}])
+
