@@ -1,0 +1,7 @@
+food_name,calorie,image,brand_item_id,isBrand
+cereal,105,https://nix-tag-images.s3.amazonaws.com/113_thumb.jpg,,FALSE
+milk,122,https://nix-tag-images.s3.amazonaws.com/377_thumb.jpg,,FALSE
+yogurt,107,https://nix-tag-images.s3.amazonaws.com/186_thumb.jpg,,FALSE
+banana,105,https://nix-tag-images.s3.amazonaws.com/399_thumb.jpg,,FALSE
+peanut butter jelly sandwich,378,https://nix-tag-images.s3.amazonaws.com/2052_thumb.jpg,,FALSE
+jalapeno chips,149,https://nix-tag-images.s3.amazonaws.com/120_thumb.jpg,,FALSE

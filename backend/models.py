@@ -8,7 +8,7 @@ db = SQLAlchemy()
 
 class User(db.Model):
     """User in the system"""
-        __tablename__ = 'user'
+    __tablename__ = 'user'
 
     id = db.Column(
         db.Integer,
@@ -68,8 +68,9 @@ class Fooditem(db.Model):
     )
 
     isBrand = db.Column(
-        db.Boolean
-        nullable=False
+        db.Text,
+        nullable=False,
+        default='FALSE'
     )
 
 class Diary(db.Model):
@@ -83,7 +84,7 @@ class Diary(db.Model):
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('users.id', ondelete='CASCADE'),
+        db.ForeignKey('user.id', ondelete='CASCADE'),
         nullable=False
     )
 
@@ -140,7 +141,7 @@ class Mealplan(db.Model):
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('users.id', ondelete='CASCADE'),
+        db.ForeignKey('user.id', ondelete='CASCADE'),
         nullable=False
     )
 
@@ -160,7 +161,7 @@ class MealplanEntryLine(db.Model):
     """Mapping Mealplan to EntryLine and an EntryLine to Fooditem"""
     __tablename__="mealplan_entryline"
 
-    diary_id = db.Column(
+    mealplan_id = db.Column(
         db.Integer,
         db.ForeignKey('mealplan.id', ondelete="cascade"),
         primary_key=True
@@ -192,7 +193,7 @@ class Tag(db.Model):
     )
 
     mealplans = db.relationship('Mealplan',
-                                secondary='mealplan_tag' 
+                                secondary='mealplan_tag', 
                                 back_populates="tags")
 
 class MealplanTag(db.Model):
@@ -202,12 +203,14 @@ class MealplanTag(db.Model):
 
     mealplan_id = db.Column(
         db.Integer,
-        db.ForeignKey('mealplan.id', ondelete='cascade')
+        db.ForeignKey('mealplan.id', ondelete='cascade'),
+        primary_key=True,
     )
 
     tag_name = db.Column(
         db.Text,
-        db.ForeignKey('tag.name', ondelete='cascade')
+        db.ForeignKey('tag.name', ondelete='cascade'),
+        primary_key=True,
     )
 
     
