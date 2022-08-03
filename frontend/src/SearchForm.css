@@ -1,0 +1,16 @@
+.SearchForm{
+
+}
+
+.SearchForm-image{
+    height: 35px;
+    width: 35px;
+}
+
+.SearchForm-result{
+    text-transform: capitalize;
+}
+
+.SearchForm-resultwrapper{
+
+}

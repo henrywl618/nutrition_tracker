@@ -1,11 +1,11 @@
 import logo from './logo.svg';
-import SearchBar from './SearchBar';
+import SearchForm from './SearchForm';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <SearchBar />
+      <SearchForm />
     </div>
   );
 }

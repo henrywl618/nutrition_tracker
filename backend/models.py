@@ -73,6 +73,14 @@ class Fooditem(db.Model):
         default='FALSE'
     )
 
+    def serialize(self):
+        return {
+            'id':self.id,
+            'food_name':self.food_name,
+            'calorie':self.calorie,
+            'image':self.image
+        }
+
 class Diary(db.Model):
     """An individual dialy food diary"""
     __tablename__="diary"
