@@ -4,6 +4,7 @@ import "./SearchForm.css"
 
 const SearchForm = ()=>{
     let [results, setResults] = useState({common:[],branded:[]});
+    let [input, setInput] = useState("");
 
     const commonResults = results.common.map((result,idx)=>{
         if(idx<5){
@@ -18,15 +19,16 @@ const SearchForm = ()=>{
     });
     return(
         <div className="SearchForm">
-        <SearchBar setResults={setResults}/>
-        <form>
-            <div className="SearchForm-resultwrapper" id="results">
-                <h5>Common</h5>
-                {commonResults}
-                <h5>Branded</h5>
-                {brandedResults}
-            </div>
-        </form>
+        <SearchBar setResults={setResults} setInput={setInput} input={input}/>
+        {input ? ( <form>
+                        <div className="SearchForm-resultwrapper" id="results">
+                            <h5>Common</h5>
+                            {commonResults}
+                            <h5>Branded</h5>
+                            {brandedResults}
+                        </div>
+                    </form>)
+                : null}
         </div>
     )
 }

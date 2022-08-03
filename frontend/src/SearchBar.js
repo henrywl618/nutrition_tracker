@@ -1,8 +1,7 @@
 import axios, { Axios } from "axios";
 import React, {useState} from "react";
 
-const SearchBar = ({setResults})=>{
-    let [input, setInput] = useState("");
+const SearchBar = ({setResults, setInput, input})=>{
 
     const handleChange = async (e)=>{
         setInput(e.target.value);
