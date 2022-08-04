@@ -74,6 +74,16 @@ const DiaryForm = ({toggleForm})=>{
         }
     }
 
+    const deleteEntry = (index)=>{
+        setEntries((currentEntries)=>{
+            //Make a copy of the current entries and remove entry at the passed in index. Update the state to rerender entries.-
+            const copy = [...currentEntries];
+            copy.splice(index,1);
+            return copy
+
+        });
+    };
+
     const changeQty = (operation,index)=>{
         //Decrements or increments the quantity for an entry line
         if(operation ==='inc'){
@@ -133,7 +143,11 @@ const DiaryForm = ({toggleForm})=>{
             <ul>
                 {entries.map((entry,idx)=>{
                 return <li className="Diary-entryline">
-                         {entry.food_name}  Calories:{entry.calorie*entry.qty} <img src={entry.image} className="Diary-image"></img> <QuantitySelector changeQty={changeQty} index={idx} qty={entry.qty}/>
+                         {entry.food_name}  
+                         Calories:{entry.calorie*entry.qty} 
+                         <img src={entry.image} className="Diary-image"></img> 
+                         <QuantitySelector changeQty={changeQty} index={idx} qty={entry.qty}/> 
+                         <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
                        </li>
                 })}
             </ul>

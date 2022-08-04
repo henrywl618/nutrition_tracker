@@ -79,6 +79,16 @@ const DiaryView = ({setShowDiary,diaryId, isLoading, setIsLoading})=>{
         }
     }
 
+    const deleteEntry = (index)=>{
+        setEntries((currentEntries)=>{
+            //Make a copy of the current entries and remove entry at the passed in index. Update the state to rerender entries.-
+            const copy = [...currentEntries];
+            copy.splice(index,1);
+            return copy
+
+        });
+    };
+
     const changeQty = (operation,index)=>{
         //Decrements or increments the quantity for an entry line
         if(operation ==='inc'){
@@ -142,7 +152,7 @@ const DiaryView = ({setShowDiary,diaryId, isLoading, setIsLoading})=>{
 
     if (isLoading){
         return (
-            <i class="fa-solid fa-spinner"></i>
+            <i className="fa-solid fa-spinner"></i>
         )
     }else{
         return (
@@ -154,11 +164,15 @@ const DiaryView = ({setShowDiary,diaryId, isLoading, setIsLoading})=>{
                 <ul>
                     {entries.map((entry,idx)=>{
                     return <li className="DiaryView-entryline">
-                            {entry.food_name}  Calories:{entry.calorie*entry.quantity} <img src={entry.image} className="DiaryView-image"></img> <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
+                            {entry.food_name}  
+                            Calories:{entry.calorie*entry.quantity} 
+                            <img src={entry.image} className="DiaryView-image"></img> 
+                            <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
+                            <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
                         </li>
                     })}
                 </ul>
-                <button onClick={editDiary}>{saving ? <i class="fa-solid fa-spinner"></i> : "Save Changes"}</button>
+                <button onClick={editDiary}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</button>
             </div>
         )
     }

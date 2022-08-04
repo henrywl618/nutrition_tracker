@@ -31,6 +31,15 @@ const Diary = ({userId})=>{
         if(showForm) toggleForm();
     };
 
+    const deleteDiary = async (diaryId)=>{
+        try{
+            
+        }   
+        catch(error){
+            console.log(error)
+        }
+    };
+
     useEffect(()=>{
         const fetchData = async ()=>{
             const resp = await axios({method:'get',
@@ -49,7 +58,10 @@ const Diary = ({userId})=>{
                 <h4>Daily Food Diaries</h4>
                 <button onClick={viewForm}>Create a new diary</button>
                 {response && response.map((diary)=>{
-                    return <li><a onClick={()=>viewDiary(true,diary.id)}>{diary.date}</a></li>
+                    return <li>
+                            <a onClick={()=>viewDiary(true,diary.id)}>{diary.date}</a>
+                            <button onClick={()=>deleteDiary(diary.id)}><i className="fa-solid fa-trash-can"></i></button>
+                          </li>
                 })}
             </ul>
             {showForm && <DiaryForm toggleForm={toggleForm}/>}
