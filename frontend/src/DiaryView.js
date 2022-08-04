@@ -1,16 +1,21 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect,useState } from "react";
 import SearchForm from "./SearchForm";
 import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
-import "./DiaryForm.css";
+import "./DiaryView.css";
+import { useToggleBool } from "./hooks";
 
-const DiaryForm = ({toggleForm})=>{
+let buttonIcon = "Save Changes";
+
+const DiaryView = ({setShowDiary,diaryId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
     let [results, setResults] = useState(emptyResults);
     let [date, setDate] = useState("");
     let [calorie, setCalorie] = useState(2000);
+    let [saving, setSaving] = useState(false);
+
 
     //Click handler for the search results. 
     //fooditem parameter is an object containing food data from NutritionIX API for the corresponding search result we clicked on.
@@ -31,7 +36,7 @@ const DiaryForm = ({toggleForm})=>{
                                     image: item.photo.thumb,
                                     brand_item_id: item.nix_item_id,
                                     isBrand: "TRUE",
-                                    qty:1
+                                    quantity:1
                                     }
                 setEntries((currentEntries)=>{
                     const copy = [...currentEntries, newEntry];
@@ -57,7 +62,7 @@ const DiaryForm = ({toggleForm})=>{
                                 calorie: Math.round(item.nf_calories),
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
-                                qty:1,
+                                quantity:1,
                                 }
                 setEntries((currentEntries)=>{
                 const copy = [...currentEntries, newEntry];
@@ -77,69 +82,86 @@ const DiaryForm = ({toggleForm})=>{
     const changeQty = (operation,index)=>{
         //Decrements or increments the quantity for an entry line
         if(operation ==='inc'){
-            let new_qty = entries[index].qty + 1
+            let new_qty = entries[index].quantity + 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }
         else if(operation ==='dec'){
             //Prevent decrementing below 1
-            let new_qty = entries[index].qty - 1 <=0 ? 1 : entries[index].qty - 1
+            let new_qty = entries[index].quantity - 1 <=0 ? 1 : entries[index].quantity - 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }
     }
 
-    const changeDate = (e)=>{
-        //Handles form changes for Date input
-        setDate(e.target.value)
-    };
 
-    const changeCalorie = (e)=>{
-        //Handles form changes for Calorie input
-        setCalorie(e.target.value)
-    };
-
-    const createDiary = async ()=>{
+    const editDiary = async ()=>{
         //Submits a post request to the backend server with entry data to create a new Diary and corresponding entries in the database.
-        const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
+        const json = JSON.stringify({entries:[...entries],diary_id:diaryId});
+        setSaving(true)
+        console.log(saving)
         try{
-            const response = await axios({method:'post',
-                                          url:"http://127.0.0.1:5000/diary",
+            const response = await axios({method:'put',
+                                          url:`http://127.0.0.1:5000/diary/${diaryId}`,
                                           headers:{"Content-Type":"application/json"},
                                           data:json})
-            //Hide the form on successful submission
-            if(response.data.success === true){
-                toggleForm();
-            }
+            const entries = response.data.entries;
+            setSaving(false);
+            console.log(saving)
+            setEntries([...entries]);
+
         }
         catch(error){
+            setSaving(false);
             console.log(error)
         }
     }
 
-    return (
-        <div>
-            <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results} date={date} setDate={setDate}/>
-            <label htmlFor="date">Date</label>
-            <input type="date" id="date" value={date} onChange={changeDate}/>
-            <label htmlFor="calorie">Set Calorie Goal</label>
-            <input type="number" id="calorie" value={calorie} onChange={changeCalorie}></input>
-            <ul>
-                {entries.map((entry,idx)=>{
-                return <li className="Diary-entryline">
-                         {entry.food_name}  Calories:{entry.calorie*entry.qty} <img src={entry.image} className="Diary-image"></img> <QuantitySelector changeQty={changeQty} index={idx} qty={entry.qty}/>
-                       </li>
-                })}
-            </ul>
-            <button onClick={createDiary}>Submit Diary</button>
-        </div>
-    )
+    useEffect(()=>{
+        const getDiary = async()=>{
+            try{
+                const resp = await axios.get(`http://127.0.0.1:5000/diary/${diaryId}`)
+                const diary = resp.data
+                setDate(diary.date)
+                setCalorie(diary.calorie_goal)
+                setEntries(diary.entries)
+                setTimeout(()=>setIsLoading(false),100);
+            }
+            catch(error){
+                console.log(error)
+            }
+        };
+        getDiary();
+    },[diaryId,isLoading]);
+
+    if (isLoading){
+        return (
+            <i class="fa-solid fa-spinner"></i>
+        )
+    }else{
+        return (
+            <div>
+                <h4>Food Diary</h4>
+                <p>{date}</p>
+                <p>Calorie Goal: {calorie}</p>
+                <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results} date={date} setDate={setDate}/>
+                <ul>
+                    {entries.map((entry,idx)=>{
+                    return <li className="DiaryView-entryline">
+                            {entry.food_name}  Calories:{entry.calorie*entry.quantity} <img src={entry.image} className="DiaryView-image"></img> <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
+                        </li>
+                    })}
+                </ul>
+                <button onClick={editDiary}>{saving ? <i class="fa-solid fa-spinner"></i> : "Save Changes"}</button>
+            </div>
+        )
+    }
 };
 
-export default DiaryForm;
+export default DiaryView;

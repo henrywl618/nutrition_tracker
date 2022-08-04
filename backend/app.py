@@ -55,7 +55,7 @@ def view_diaries():
     """ Returns a list of all the users diaries """
     user_id = request.args.get("userId")
     user = User.query.get_or_404(user_id)
-    diaries = user.diaries
+    diaries = Diary.query.filter(Diary.user_id == user_id).order_by(Diary.date.desc()).all()
     serialized_diaries = [diary.serialize() for diary in diaries]
     return jsonify(serialized_diaries)
 
@@ -101,5 +101,42 @@ def view_diary(diary_id):
     entries = diary.entryline
     serialized_entries = [entry.serialize() for entry in entries]
 
-    return jsonify([{**diary.serialize(),'entries':serialized_entries}])
+    return jsonify({**diary.serialize(),'entries':serialized_entries})
+
+@app.route("/diary/<int:diary_id>", methods=["PUT"])
+def edit_diary(diary_id):
+    """ Edits a specific diary """
+
+    data= request.json
+    diary = Diary.query.get_or_404(diary_id)
+
+    # Delete all current entries and create new entries passed in from the frontend
+    for entry in diary.entryline:
+        db.session.delete(entry)
+    db.session.commit()
+
+    # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
+    for entry in data['entries']:
+        new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
+        if new_fooditem:
+            new_entry = DiaryEntryLine(diary_id=diary.id,
+                                        fooditem_id=new_fooditem.id,
+                                        quantity=entry['quantity'])
+            diary.entryline.append(new_entry)
+        else:
+            new_fooditem = Fooditem(food_name=entry['food_name'],
+                                    calorie=entry['calorie'],
+                                    isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
+                                    brand_item_id = entry.get('brand_item_id'),
+                                    image=entry['image'])
+            db.session.add(new_fooditem)
+            db.session.commit()
+            new_entry = DiaryEntryLine(diary_id=diary.id,
+                                        fooditem_id=new_fooditem.id,
+                                        quantity=entry['quantity'])
+            diary.entryline.append(new_entry)
+    db.session.commit()
+    entries = diary.entryline
+    serialized_entries = [entry.serialize() for entry in entries]
+    return jsonify({**diary.serialize(), 'entries':serialized_entries, 'success':True})
 

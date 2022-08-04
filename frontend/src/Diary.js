@@ -2,16 +2,34 @@ import React, { useEffect, useState } from "react";
 import DiaryForm from "./DiaryForm";
 import axios from "axios";
 import { useToggleBool } from "./hooks";
+import "./Diary.css";
+import DiaryView from "./DiaryView";
 
 const Diary = ({userId})=>{
 
-    let [viewDiary, setViewDiary] = useState("");
+    // let [viewDiary, setViewDiary] = useState("");
     let [response, setResponse] = useState(null);
     let [showForm, toggleForm] = useToggleBool(false);
+    let [showDiary, setShowDiary] = useState(false);
+    let [viewingDiaryId, setViewingDiaryId] = useState(null);
+    let [isLoading, setIsLoading] = useState(true);                                     
 
     const viewForm = ()=>{
-        if(showForm === false) toggleForm()
+        if(showForm === false){
+            toggleForm();
+            setShowDiary(false);
+            setViewingDiaryId(null);
+        } 
     }
+
+    const viewDiary = (boolean, diaryId)=>{
+        // Click handler for selecting a diary to view
+        setShowDiary(boolean);
+        setViewingDiaryId(diaryId);
+        setIsLoading(true);
+
+        if(showForm) toggleForm();
+    };
 
     useEffect(()=>{
         const fetchData = async ()=>{
@@ -20,22 +38,22 @@ const Diary = ({userId})=>{
                                             params:{userId:userId}
                                         })
             setResponse(resp.data);
-            console.log(response)
         };
         fetchData();
 
-    },[]);
+    },[showForm]);
 
     return(
         <>  
-            <ul>
+            <ul className="Diary-list">
                 <h4>Daily Food Diaries</h4>
                 <button onClick={viewForm}>Create a new diary</button>
                 {response && response.map((diary)=>{
-                    return <li><a href={`http://127.0.0.1:5000/diary/${diary.id}`}>{diary.date}</a></li>
+                    return <li><a onClick={()=>viewDiary(true,diary.id)}>{diary.date}</a></li>
                 })}
             </ul>
-            {showForm && <DiaryForm />}
+            {showForm && <DiaryForm toggleForm={toggleForm}/>}
+            {showDiary && <DiaryView setShowDiary={setShowDiary} diaryId={viewingDiaryId} isLoading={isLoading} setIsLoading={setIsLoading}/>}
         </>
     );
 }
