@@ -9,6 +9,8 @@ const DiaryForm = ()=>{
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
     let [results, setResults] = useState(emptyResults);
+    let [date, setDate] = useState("");
+    let [calorie, setCalorie] = useState(2000);
 
     //Click handler for the search results. 
     //fooditem parameter is an object containing food data from NutritionIX API for the corresponding search result we clicked on.
@@ -18,25 +20,31 @@ const DiaryForm = ()=>{
         console.log(fooditem.nix_item_id)
         //Determine if fooditem is branded vs common so we can make the appropiate API call. Fooditem.nix_item_id is undefined for common food items 
         if(fooditem.nix_item_id){
-            const response = await axios({ method:"get",
-                                           url: "http://127.0.0.1:5000/nutrition/brand",
-                                           params: {nix_item_id : fooditem.nix_item_id},
-                                        })
-            const item=response.data                            
-            const newEntry = {food_name: item.food_name,
-                              calorie: Math.round(item.nf_calories),
-                              image: item.photo.thumb,
-                              brand_item_id: item.nix_item_id,
-                              isBrand: "TRUE",
-                              qty:1
-                              }
-            setEntries((currentEntries)=>{
-                const copy = [...currentEntries, newEntry];
-                return copy
-            });
-            //Reset search input after clicking on a result.
-            setInput("");
-            setResults(emptyResults);
+            try{
+                const response = await axios({ method:"get",
+                                                url: "http://127.0.0.1:5000/nutrition/brand",
+                                                params: {nix_item_id : fooditem.nix_item_id},
+                                            })
+                const item=response.data                            
+                const newEntry = {food_name: item.food_name,
+                                    calorie: Math.round(item.nf_calories),
+                                    image: item.photo.thumb,
+                                    brand_item_id: item.nix_item_id,
+                                    isBrand: "TRUE",
+                                    qty:1
+                                    }
+                setEntries((currentEntries)=>{
+                    const copy = [...currentEntries, newEntry];
+                    return copy
+                });
+                //Reset search input after clicking on a result.
+                setInput("");
+                setResults(emptyResults);
+
+            }
+            catch(error){
+                console.log(error)
+            }
 
         }else{
             const response = await axios({ method:"get",
@@ -71,6 +79,7 @@ const DiaryForm = ()=>{
             })
         }
         else if(operation ==='dec'){
+            //Prevent decrementing below 1
             let new_qty = entries[index].qty - 1 <=0 ? 1 : entries[index].qty - 1
             setEntries((e)=>{
                 const copy = [...e]
@@ -80,9 +89,35 @@ const DiaryForm = ()=>{
         }
     }
 
+    const changeDate = (e)=>{
+        setDate(e.target.value)
+    };
+
+    const changeCalorie = (e)=>{
+        setCalorie(e.target.value)
+    };
+
+    const createDiary = async ()=>{
+        const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
+        try{
+            const response = await axios({method:'post',
+                                          url:"http://127.0.0.1:5000/diary",
+                                          headers:{"Content-Type":"application/json"},
+                                          data:json})
+            console.log(response)
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
+
     return (
         <div>
-            <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results}/>
+            <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results} date={date} setDate={setDate}/>
+            <label htmlFor="date">Date</label>
+            <input type="date" id="date" value={date} onChange={changeDate}/>
+            <label htmlFor="calorie">Set Calorie Goal</label>
+            <input type="number" id="calorie" value={calorie} onChange={changeCalorie}></input>
             <ul>
                 {entries.map((entry,idx)=>{
                 return <li className="Diary-entryline">
@@ -90,6 +125,7 @@ const DiaryForm = ()=>{
                        </li>
                 })}
             </ul>
+            <button onClick={createDiary}>Submit Diary</button>
         </div>
     )
 };

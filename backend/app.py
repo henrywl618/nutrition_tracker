@@ -59,6 +59,41 @@ def view_diaries():
     serialized_diaries = [diary.serialize() for diary in diaries]
     return jsonify(serialized_diaries)
 
+@app.route("/diary", methods=['POST'])
+def create_diary():
+    """ Creates a new diary for the given user and form data"""
+    data = request.json
+    print(data)
+    new_diary = Diary(user_id=data['user_id'],
+                      date=data['date'],
+                      calorie_goal=data['calorie_goal'],)
+    db.session.add(new_diary)
+    db.session.commit()
+    # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
+    for entry in data['entries']:
+        new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
+        if new_fooditem:
+            new_entry = DiaryEntryLine(diary_id=new_diary.id,
+                                        fooditem_id=new_fooditem.id,
+                                        quantity=entry['qty'])
+            new_diary.entryline.append(new_entry)
+        else:
+            new_fooditem = Fooditem(food_name=entry['food_name'],
+                                    calorie=entry['calorie'],
+                                    isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
+                                    brand_item_id = entry.get('brand_item_id'),
+                                    image=entry['image'])
+            db.session.add(new_fooditem)
+            db.session.commit()
+            new_entry = DiaryEntryLine(diary_id=new_diary.id,
+                                        fooditem_id=new_fooditem.id,
+                                        quantity=entry['qty'])
+            new_diary.entryline.append(new_entry)
+    db.session.commit()
+    entries = new_diary.entryline
+    serialized_entries = [entry.serialize() for entry in entries]
+    return jsonify({**new_diary.serialize(), 'entries':serialized_entries, 'success':True})
+
 @app.route("/diary/<int:diary_id>", methods=["GET"])
 def view_diary(diary_id):
     """ Return data for a specific diary """
