@@ -140,3 +140,17 @@ def edit_diary(diary_id):
     serialized_entries = [entry.serialize() for entry in entries]
     return jsonify({**diary.serialize(), 'entries':serialized_entries, 'success':True})
 
+@app.route("/diary/<int:diary_id>", methods=["DELETE"])
+def delete_diary(diary_id):
+    """ Removes a single diary from the database """
+
+    # Query for a diary using its id and remove it from the database.
+    diary = Diary.query.get_or_404(diary_id)
+    user = diary.user
+    db.session.delete(diary)
+    db.session.commit()
+    # Get the new list of diaries for
+    diaries = Diary.query.filter(Diary.user_id == user.id).order_by(Diary.date.desc()).all()
+    serialized_diaries = [diary.serialize() for diary in diaries]
+    return jsonify(serialized_diaries)
+

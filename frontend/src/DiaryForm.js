@@ -4,7 +4,7 @@ import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import "./DiaryForm.css";
 
-const DiaryForm = ({toggleForm})=>{
+const DiaryForm = ({toggleForm, viewDiaryList})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
@@ -152,6 +152,7 @@ const DiaryForm = ({toggleForm})=>{
                 })}
             </ul>
             <button onClick={createDiary}>Submit Diary</button>
+            <button onClick={viewDiaryList}>Go Back</button>
         </div>
     )
 };

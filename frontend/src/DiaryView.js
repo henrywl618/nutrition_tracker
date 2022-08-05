@@ -3,11 +3,8 @@ import SearchForm from "./SearchForm";
 import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import "./DiaryView.css";
-import { useToggleBool } from "./hooks";
 
-let buttonIcon = "Save Changes";
-
-const DiaryView = ({setShowDiary,diaryId, isLoading, setIsLoading})=>{
+const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
@@ -173,6 +170,7 @@ const DiaryView = ({setShowDiary,diaryId, isLoading, setIsLoading})=>{
                     })}
                 </ul>
                 <button onClick={editDiary}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</button>
+                <button onClick={viewDiaryList}>Go Back</button>
             </div>
         )
     }

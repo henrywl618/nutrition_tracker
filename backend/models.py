@@ -107,7 +107,7 @@ class Diary(db.Model):
     )
 
     user = db.relationship('User', back_populates='diaries')
-    entryline = db.relationship('DiaryEntryLine', back_populates="diary")
+    entryline = db.relationship('DiaryEntryLine', back_populates="diary", cascade="all, delete")
 
     def serialize(self):
         return{

@@ -4,10 +4,11 @@ import axios from "axios";
 import { useToggleBool } from "./hooks";
 import "./Diary.css";
 import DiaryView from "./DiaryView";
+import DiaryList from "./DiaryList";
 
 const Diary = ({userId})=>{
 
-    // let [viewDiary, setViewDiary] = useState("");
+    let [showDiaryList, setShowDiaryList] = useState(true);
     let [response, setResponse] = useState(null);
     let [showForm, toggleForm] = useToggleBool(false);
     let [showDiary, setShowDiary] = useState(false);
@@ -19,6 +20,7 @@ const Diary = ({userId})=>{
             toggleForm();
             setShowDiary(false);
             setViewingDiaryId(null);
+            setShowDiaryList(false);
         } 
     }
 
@@ -27,13 +29,24 @@ const Diary = ({userId})=>{
         setShowDiary(boolean);
         setViewingDiaryId(diaryId);
         setIsLoading(true);
+        setShowDiaryList(false);
 
+        if(showForm) toggleForm();
+    };
+
+    const viewDiaryList = ()=>{
+        // Click handler for Go Back button on DiaryView and DiaryForm components
+        setShowDiary(false);
+        setViewingDiaryId(null);
+        setShowDiaryList(true);
         if(showForm) toggleForm();
     };
 
     const deleteDiary = async (diaryId)=>{
         try{
-            
+            const resp = await axios({method:'delete',
+                                      url:`http://127.0.0.1:5000/diary/${diaryId}`})
+            setResponse(resp.data);
         }   
         catch(error){
             console.log(error)
@@ -54,18 +67,9 @@ const Diary = ({userId})=>{
 
     return(
         <>  
-            <ul className="Diary-list">
-                <h4>Daily Food Diaries</h4>
-                <button onClick={viewForm}>Create a new diary</button>
-                {response && response.map((diary)=>{
-                    return <li>
-                            <a onClick={()=>viewDiary(true,diary.id)}>{diary.date}</a>
-                            <button onClick={()=>deleteDiary(diary.id)}><i className="fa-solid fa-trash-can"></i></button>
-                          </li>
-                })}
-            </ul>
-            {showForm && <DiaryForm toggleForm={toggleForm}/>}
-            {showDiary && <DiaryView setShowDiary={setShowDiary} diaryId={viewingDiaryId} isLoading={isLoading} setIsLoading={setIsLoading}/>}
+            {showDiaryList && <DiaryList response={response} viewForm={viewForm} viewDiary={viewDiary} deleteDiary={deleteDiary}/>}
+            {showForm && <DiaryForm toggleForm={toggleForm} viewDiaryList={viewDiaryList}/>}
+            {showDiary && <DiaryView viewDiaryList={viewDiaryList} diaryId={viewingDiaryId} isLoading={isLoading} setIsLoading={setIsLoading}/>}
         </>
     );
 }
