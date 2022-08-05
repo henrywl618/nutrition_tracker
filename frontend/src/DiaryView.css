@@ -1,0 +1,8 @@
+.DiaryView-entryline{
+    text-transform: capitalize;
+}
+
+.DiaryView-image{
+    height: 35px;
+    width: 35px;
+}

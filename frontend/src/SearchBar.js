@@ -3,24 +3,27 @@ import React, {useState} from "react";
 
 const SearchBar = ({setResults, setInput, input})=>{
 
-    const handleChange = async (e)=>{
+    const handleChange = (e)=>{
         setInput(e.target.value);
-        if(e.target.value){
+    };
+
+    const search = async (e)=>{
+        e.preventDefault();
+        if(input){
             const response = await axios({
                 method: 'get',
                 url: 'http://127.0.0.1:5000/search',
-                params:{query:e.target.value}
+                params:{query:input}
             })
             setResults(response.data)
         }
-
     };
 
     return (
-        <>
-            <input type="text" placeholder="Search..." list="results" onChange={handleChange} value={input}></input>
-        </>
-
+        <form>
+            <input type="text" placeholder="Search for a food item" list="results" onChange={handleChange} value={input}></input>
+            <button onClick={search}><i className="fa-solid fa-magnifying-glass"></i></button>
+        </form>
     )
 };
 
