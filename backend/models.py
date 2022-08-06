@@ -40,6 +40,30 @@ class User(db.Model):
     diaries = db.relationship('Diary', back_populates="user")
     mealplans = db.relationship('Mealplan', back_populates="user")
 
+    def serialize(self):
+        return {'id':self.id,
+                'username':self.username,
+                'password':self.password,
+                'email':self.email,}
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """Find user with `username` and `password`.
+
+        It searches for a user whose password hash matches this password
+        and, if it finds such a user, returns that user object.
+
+        If can't find matching user (or if password is wrong), returns False.
+        """ 
+        user = cls.query.filter_by(username=username).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False               
+
 class Fooditem(db.Model):
     """An individual food item"""
     __tablename__="fooditem"
