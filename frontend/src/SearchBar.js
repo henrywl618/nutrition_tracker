@@ -1,27 +1,29 @@
 import axios, { Axios } from "axios";
 import React, {useState} from "react";
 
-const SearchBar = ()=>{
-    let [input, setInput] = useState("");
-    let [results, setResults] = useState("");
+const SearchBar = ({setResults, setInput, input})=>{
 
-    const handleChange = async (e)=>{
+    const handleChange = (e)=>{
         setInput(e.target.value);
-        const response = await axios({
-                                       method: 'get',
-                                       url: 'https://trackapi.nutritionix.com/v2/search/instant',
-                                       headers:{'x-app-id':'cb1063ec',
-                                               'x-app-key':'fe556ea31678a878f116c76bbd8da68e'},
-                                       params:{query:e.target.value}
-                               })
-        console.log(response.data)
+    };
+
+    const search = async (e)=>{
+        e.preventDefault();
+        if(input){
+            const response = await axios({
+                method: 'get',
+                url: 'http://127.0.0.1:5000/search',
+                params:{query:input}
+            })
+            setResults(response.data)
+        }
     };
 
     return (
-        <>
-            <input type="text" placeholder="Search..." onChange={handleChange} value={input}></input>
-        </>
-
+        <form>
+            <input type="text" placeholder="Search for a food item" list="results" onChange={handleChange} value={input}></input>
+            <button onClick={search}><i className="fa-solid fa-magnifying-glass"></i></button>
+        </form>
     )
 };
 

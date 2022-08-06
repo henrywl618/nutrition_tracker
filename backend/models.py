@@ -40,6 +40,30 @@ class User(db.Model):
     diaries = db.relationship('Diary', back_populates="user")
     mealplans = db.relationship('Mealplan', back_populates="user")
 
+    def serialize(self):
+        return {'id':self.id,
+                'username':self.username,
+                'password':self.password,
+                'email':self.email,}
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """Find user with `username` and `password`.
+
+        It searches for a user whose password hash matches this password
+        and, if it finds such a user, returns that user object.
+
+        If can't find matching user (or if password is wrong), returns False.
+        """ 
+        user = cls.query.filter_by(username=username).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False               
+
 class Fooditem(db.Model):
     """An individual food item"""
     __tablename__="fooditem"
@@ -73,6 +97,14 @@ class Fooditem(db.Model):
         default='FALSE'
     )
 
+    def serialize(self):
+        return {
+            'id':self.id,
+            'food_name':self.food_name,
+            'calorie':self.calorie,
+            'image':self.image
+        }
+
 class Diary(db.Model):
     """An individual dialy food diary"""
     __tablename__="diary"
@@ -99,7 +131,14 @@ class Diary(db.Model):
     )
 
     user = db.relationship('User', back_populates='diaries')
-    entryline = db.relationship('DiaryEntryLine', back_populates="diary")
+    entryline = db.relationship('DiaryEntryLine', back_populates="diary", cascade="all, delete")
+
+    def serialize(self):
+        return{
+            'id':self.id,
+            'date':self.date,
+            'calorie_goal':self.calorie_goal,
+        }
 
 class DiaryEntryLine(db.Model):
     """Mapping Diary to EntryLine and an EntryLine to Fooditem"""
@@ -124,6 +163,15 @@ class DiaryEntryLine(db.Model):
 
     fooditem = db.relationship('Fooditem')
     diary = db.relationship('Diary', back_populates="entryline")
+
+    def serialize(self):
+        return {
+            'id':self.fooditem.id,
+            'food_name':self.fooditem.food_name,
+            'calorie':self.fooditem.calorie,
+            'image':self.fooditem.image,
+            'quantity':self.quantity
+        }
 
 class Mealplan(db.Model):
     """An individual mealplan"""

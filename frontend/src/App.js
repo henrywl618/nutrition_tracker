@@ -1,11 +1,16 @@
-import logo from './logo.svg';
-import SearchBar from './SearchBar';
+import React, {useState} from 'react';
+import Diary from './Diary';
+import AppNavbar from './AppNavbar';
 import './App.css';
 
+
 function App() {
+  let [curentView,setCurrentView] = useState("");
+
   return (
     <div className="App">
-      <SearchBar />
+      <AppNavbar />
+      <Diary userId={4}/>
     </div>
   );
 }
