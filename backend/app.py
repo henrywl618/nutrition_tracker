@@ -1,6 +1,7 @@
 import os, requests
 from flask import Flask, request, jsonify 
 from flask_cors import CORS
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, set_access_cookies
 from models import db, connect_db, User, Fooditem, Diary, DiaryEntryLine, Mealplan, MealplanEntryLine, Tag, MealplanTag
 
 NUTRITIONIX_API_HEADERS = {'x-app-id':'cb1063ec',
@@ -16,6 +17,9 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 # Enable CORS support for all routes. Allows React frontend to make http requests to backend server.
 CORS(app)
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = "supersecretkey" 
+jwt = JWTManager(app)
 
 connect_db(app)
 
@@ -24,6 +28,19 @@ def view_homepage():
     fooditems = Fooditem.query.all()
     serialized = [fooditem.serialize() for fooditem in fooditems]
     return jsonify(serialized)
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.json.get("username")
+    password = request.json.get("password")
+    user = User.authenticate(username, password)
+    if not user:
+        return jsonify({"msg": "Bad username or password"}), 401
+
+    access_token = create_access_token(identity=user.serialize())
+    response = jsonify(msg="Login successful")
+    set_access_cookies(response, access_token)
+    return response
 
 @app.route("/search", methods=['GET'])
 def search():
