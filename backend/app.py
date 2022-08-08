@@ -1,7 +1,8 @@
 import os, requests
 from flask import Flask, request, jsonify 
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, set_access_cookies
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, current_user
+from sqlalchemy.exc import IntegrityError
 from models import db, connect_db, User, Fooditem, Diary, DiaryEntryLine, Mealplan, MealplanEntryLine, Tag, MealplanTag
 
 NUTRITIONIX_API_HEADERS = {'x-app-id':'cb1063ec',
@@ -18,7 +19,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 # Enable CORS support for all routes. Allows React frontend to make http requests to backend server.
 CORS(app)
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = "supersecretkey" 
+app.config["JWT_SECRET_KEY"] = "supersecretkey"
+app.config["JWT_TOKEN_LOCATION"] = ["headers"]
 jwt = JWTManager(app)
 
 connect_db(app)
@@ -29,6 +31,21 @@ def view_homepage():
     serialized = [fooditem.serialize() for fooditem in fooditems]
     return jsonify(serialized)
 
+@app.route("/signup", methods=["POST"])
+def signup():
+    try:
+        new_user = User.signup(
+            username=request.json.get("username"), 
+            password=request.json.get("password"),
+            email=request.json.get("email") )
+        db.session.commit()
+        access_token = create_access_token(identity=new_user)
+        response = jsonify(msg="Signup successful",access_token=access_token)
+        return response
+    except IntegrityError:
+        return jsonify(msg="Username already taken")
+
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.json.get("username")
@@ -37,51 +54,77 @@ def login():
     if not user:
         return jsonify({"msg": "Bad username or password"}), 401
 
-    access_token = create_access_token(identity=user.serialize())
-    response = jsonify(msg="Login successful")
-    set_access_cookies(response, access_token)
+    access_token = create_access_token(identity=user)
+    response = jsonify(msg="Login successful",access_token=access_token)
     return response
+
+# Register a callback function that takes whatever object is passed in as the
+# identity when creating JWTs and converts it to a JSON serializable format.
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user.id
+
+
+# Register a callback function that loads a user from your database whenever
+# a protected route is accessed. This should return any python object on a
+# successful lookup, or None if the lookup failed for any reason (for example
+# if the user has been deleted from the database).
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return User.query.get_or_404(identity)
+
 
 @app.route("/search", methods=['GET'])
 def search():
     """Make an API call to NUTRITIONIX API to get results for search bar"""
     query = request.args.get("query")
-    response = requests.get(SEARCH_URL,
-                            headers=NUTRITIONIX_API_HEADERS, 
-                            params={'query':query})
-    return jsonify(response.json())
+    try:
+        response = requests.get(SEARCH_URL,
+                                headers=NUTRITIONIX_API_HEADERS, 
+                                params={'query':query})
+        return jsonify(response.json())
+    except Exception as e:
+        print(e)
 
 @app.route("/nutrition/<category>", methods=['GET'])
 def get_nutrition(category):
     """Make an API call to NUTRITIONIX API to get nutrition data for a specific fooditem"""
     if category == 'brand':
-        id = request.args.get("nix_item_id")
-        response = requests.get("https://trackapi.nutritionix.com/v2/search/item", 
-                                headers=NUTRITIONIX_API_HEADERS,
-                                params={'nix_item_id':id})
-        return jsonify(response.json()["foods"][0])
+        try:
+            id = request.args.get("nix_item_id")
+            response = requests.get("https://trackapi.nutritionix.com/v2/search/item", 
+                                    headers=NUTRITIONIX_API_HEADERS,
+                                    params={'nix_item_id':id})
+            return jsonify(response.json()["foods"][0])
+        except Exception as e:
+            print(e)
     elif category == 'common':
-        query = request.args.get("food_name")
-        response = requests.post("https://trackapi.nutritionix.com/v2/natural/nutrients",
-                                 headers=NUTRITIONIX_API_HEADERS,
-                                 data={"query":query})
-        return jsonify(response.json()["foods"][0])  
+        try:
+            query = request.args.get("food_name")
+            response = requests.post("https://trackapi.nutritionix.com/v2/natural/nutrients",
+                                    headers=NUTRITIONIX_API_HEADERS,
+                                    data={"query":query})
+            return jsonify(response.json()["foods"][0]) 
+        except Exception as e:
+            print(e)
 
 @app.route("/diary", methods=['GET'])
+@jwt_required()
 def view_diaries():
     """ Returns a list of all the users diaries """
-    user_id = request.args.get("userId")
-    user = User.query.get_or_404(user_id)
-    diaries = Diary.query.filter(Diary.user_id == user_id).order_by(Diary.date.desc()).all()
+    user = User.query.get_or_404(current_user.id)
+    diaries = Diary.query.filter(Diary.user_id == user.id).order_by(Diary.date.desc()).all()
     serialized_diaries = [diary.serialize() for diary in diaries]
     return jsonify(serialized_diaries)
 
 @app.route("/diary", methods=['POST'])
+@jwt_required()
 def create_diary():
     """ Creates a new diary for the given user and form data"""
     data = request.json
     print(data)
-    new_diary = Diary(user_id=data['user_id'],
+    new_diary = Diary(user_id=current_user.id,
                       date=data['date'],
                       calorie_goal=data['calorie_goal'],)
     db.session.add(new_diary)
@@ -112,62 +155,75 @@ def create_diary():
     return jsonify({**new_diary.serialize(), 'entries':serialized_entries, 'success':True})
 
 @app.route("/diary/<int:diary_id>", methods=["GET"])
+@jwt_required()
 def view_diary(diary_id):
     """ Return data for a specific diary """
     diary = Diary.query.get_or_404(diary_id)
-    entries = diary.entryline
-    serialized_entries = [entry.serialize() for entry in entries]
-
-    return jsonify({**diary.serialize(),'entries':serialized_entries})
+    # Users can only view their own diaries
+    if diary.user.id == current_user.id:
+        entries = diary.entryline
+        serialized_entries = [entry.serialize() for entry in entries]
+        return jsonify({**diary.serialize(),'entries':serialized_entries})
+    else:
+        return jsonify(msg="Not authorized"),401
 
 @app.route("/diary/<int:diary_id>", methods=["PUT"])
+@jwt_required()
 def edit_diary(diary_id):
     """ Edits a specific diary """
 
     data= request.json
     diary = Diary.query.get_or_404(diary_id)
+    # Users can only edit their own diaries
+    if diary.user.id == current_user.id:
+        # Delete all current entries and create new entries passed in from the frontend
+        for entry in diary.entryline:
+            db.session.delete(entry)
+        db.session.commit()
 
-    # Delete all current entries and create new entries passed in from the frontend
-    for entry in diary.entryline:
-        db.session.delete(entry)
-    db.session.commit()
-
-    # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
-    for entry in data['entries']:
-        new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
-        if new_fooditem:
-            new_entry = DiaryEntryLine(diary_id=diary.id,
-                                        fooditem_id=new_fooditem.id,
-                                        quantity=entry['quantity'])
-            diary.entryline.append(new_entry)
-        else:
-            new_fooditem = Fooditem(food_name=entry['food_name'],
-                                    calorie=entry['calorie'],
-                                    isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
-                                    brand_item_id = entry.get('brand_item_id'),
-                                    image=entry['image'])
-            db.session.add(new_fooditem)
-            db.session.commit()
-            new_entry = DiaryEntryLine(diary_id=diary.id,
-                                        fooditem_id=new_fooditem.id,
-                                        quantity=entry['quantity'])
-            diary.entryline.append(new_entry)
-    db.session.commit()
-    entries = diary.entryline
-    serialized_entries = [entry.serialize() for entry in entries]
-    return jsonify({**diary.serialize(), 'entries':serialized_entries, 'success':True})
+        # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
+        for entry in data['entries']:
+            new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
+            if new_fooditem:
+                new_entry = DiaryEntryLine(diary_id=diary.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'])
+                diary.entryline.append(new_entry)
+            else:
+                new_fooditem = Fooditem(food_name=entry['food_name'],
+                                        calorie=entry['calorie'],
+                                        isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
+                                        brand_item_id = entry.get('brand_item_id'),
+                                        image=entry['image'])
+                db.session.add(new_fooditem)
+                db.session.commit()
+                new_entry = DiaryEntryLine(diary_id=diary.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'])
+                diary.entryline.append(new_entry)
+        db.session.commit()
+        entries = diary.entryline
+        serialized_entries = [entry.serialize() for entry in entries]
+        return jsonify({**diary.serialize(), 'entries':serialized_entries, 'success':True})
+    else:
+        return jsonify(msg="Not authorized"),401
 
 @app.route("/diary/<int:diary_id>", methods=["DELETE"])
+@jwt_required()
 def delete_diary(diary_id):
     """ Removes a single diary from the database """
 
     # Query for a diary using its id and remove it from the database.
     diary = Diary.query.get_or_404(diary_id)
     user = diary.user
-    db.session.delete(diary)
-    db.session.commit()
-    # Get the new list of diaries for
-    diaries = Diary.query.filter(Diary.user_id == user.id).order_by(Diary.date.desc()).all()
-    serialized_diaries = [diary.serialize() for diary in diaries]
-    return jsonify(serialized_diaries)
+    # Users can only delete their own diaries. 
+    if user.id == current_user.id:
+        db.session.delete(diary)
+        db.session.commit()
+        # Get the new list of diaries for
+        diaries = Diary.query.filter(Diary.user_id == user.id).order_by(Diary.date.desc()).all()
+        serialized_diaries = [diary.serialize() for diary in diaries]
+        return jsonify(serialized_diaries)
+    else:
+        return jsonify(msg="Not authorized"),401
 

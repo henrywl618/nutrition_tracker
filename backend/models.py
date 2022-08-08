@@ -18,7 +18,6 @@ class User(db.Model):
     email = db.Column(
         db.Text,
         nullable=False,
-        unique=True,
     )
 
     username = db.Column(
@@ -62,7 +61,24 @@ class User(db.Model):
             if is_auth:
                 return user
 
-        return False               
+        return False
+    
+    @classmethod
+    def signup(cls, username, password, email):
+        """Sign up user.
+        Hashes password and adds user to the system.
+        """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = User(
+            username=username,
+            password=hashed_pwd,
+            email=email,
+        )
+
+        db.session.add(user)
+        return user
 
 class Fooditem(db.Model):
     """An individual food item"""

@@ -6,7 +6,7 @@ import "./Diary.css";
 import DiaryView from "./DiaryView";
 import DiaryList from "./DiaryList";
 
-const Diary = ({userId})=>{
+const Diary = ()=>{
 
     let [showDiaryList, setShowDiaryList] = useState(true);
     let [response, setResponse] = useState(null);
@@ -45,7 +45,8 @@ const Diary = ({userId})=>{
     const deleteDiary = async (diaryId)=>{
         try{
             const resp = await axios({method:'delete',
-                                      url:`http://127.0.0.1:5000/diary/${diaryId}`})
+                                      url:`http://127.0.0.1:5000/diary/${diaryId}`,
+                                      headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`},})
             setResponse(resp.data);
         }   
         catch(error){
@@ -57,7 +58,7 @@ const Diary = ({userId})=>{
         const fetchData = async ()=>{
             const resp = await axios({method:'get',
                                             url:'http://127.0.0.1:5000/diary',
-                                            params:{userId:userId}
+                                            headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
                                         })
             setResponse(resp.data);
         };

@@ -116,7 +116,8 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
         try{
             const response = await axios({method:'put',
                                           url:`http://127.0.0.1:5000/diary/${diaryId}`,
-                                          headers:{"Content-Type":"application/json"},
+                                          headers:{"Content-Type":"application/json",                                             
+                                                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
             const entries = response.data.entries;
             setSaving(false);
@@ -133,7 +134,8 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
     useEffect(()=>{
         const getDiary = async()=>{
             try{
-                const resp = await axios.get(`http://127.0.0.1:5000/diary/${diaryId}`)
+                const resp = await axios.get(`http://127.0.0.1:5000/diary/${diaryId}`, 
+                                            {headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}})
                 const diary = resp.data
                 setDate(diary.date)
                 setCalorie(diary.calorie_goal)
@@ -157,6 +159,7 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                 <h4>Food Diary</h4>
                 <p>{date}</p>
                 <p>Calorie Goal: {calorie}</p>
+                <p>Calories to goal: {calorie-entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
                 <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results} date={date} setDate={setDate}/>
                 <ul>
                     {entries.map((entry,idx)=>{

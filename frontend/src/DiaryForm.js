@@ -121,11 +121,12 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
         try{
             const response = await axios({method:'post',
                                           url:"http://127.0.0.1:5000/diary",
-                                          headers:{"Content-Type":"application/json"},
+                                          headers:{"Content-Type":"application/json",
+                                                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
             //Hide the form on successful submission
             if(response.data.success === true){
-                toggleForm();
+                viewDiaryList();
             }
         }
         catch(error){
