@@ -1,8 +1,8 @@
-import os, requests
+import os, requests, datetime
 from flask import Flask, request, jsonify 
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, current_user
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
 from models import db, connect_db, User, Fooditem, Diary, DiaryEntryLine, Mealplan, MealplanEntryLine, Tag, MealplanTag
 
 NUTRITIONIX_API_HEADERS = {'x-app-id':'cb1063ec',
@@ -21,6 +21,7 @@ CORS(app)
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = "supersecretkey"
 app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(hours=24)
 jwt = JWTManager(app)
 
 connect_db(app)
@@ -122,37 +123,42 @@ def view_diaries():
 @jwt_required()
 def create_diary():
     """ Creates a new diary for the given user and form data"""
-    data = request.json
-    print(data)
-    new_diary = Diary(user_id=current_user.id,
-                      date=data['date'],
-                      calorie_goal=data['calorie_goal'],)
-    db.session.add(new_diary)
-    db.session.commit()
-    # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
-    for entry in data['entries']:
-        new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
-        if new_fooditem:
-            new_entry = DiaryEntryLine(diary_id=new_diary.id,
-                                        fooditem_id=new_fooditem.id,
-                                        quantity=entry['qty'])
-            new_diary.entryline.append(new_entry)
-        else:
-            new_fooditem = Fooditem(food_name=entry['food_name'],
-                                    calorie=entry['calorie'],
-                                    isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
-                                    brand_item_id = entry.get('brand_item_id'),
-                                    image=entry['image'])
-            db.session.add(new_fooditem)
-            db.session.commit()
-            new_entry = DiaryEntryLine(diary_id=new_diary.id,
-                                        fooditem_id=new_fooditem.id,
-                                        quantity=entry['qty'])
-            new_diary.entryline.append(new_entry)
-    db.session.commit()
-    entries = new_diary.entryline
-    serialized_entries = [entry.serialize() for entry in entries]
-    return jsonify({**new_diary.serialize(), 'entries':serialized_entries, 'success':True})
+    try:
+        data = request.json
+        print(data)
+        new_diary = Diary(user_id=current_user.id,
+                        date=data['date'],
+                        calorie_goal=data['calorie_goal'],)
+        db.session.add(new_diary)
+        db.session.commit()
+        # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
+        for entry in data['entries']:
+            new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
+            if new_fooditem:
+                new_entry = DiaryEntryLine(diary_id=new_diary.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
+                new_diary.entryline.append(new_entry)
+            else:
+                new_fooditem = Fooditem(food_name=entry['food_name'],
+                                        calorie=entry['calorie'],
+                                        isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
+                                        brand_item_id = entry.get('brand_item_id'),
+                                        image=entry['image'])
+                db.session.add(new_fooditem)
+                db.session.commit()
+                new_entry = DiaryEntryLine(diary_id=new_diary.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
+                new_diary.entryline.append(new_entry)
+        db.session.commit()
+        entries = new_diary.entryline
+        serialized_entries = [entry.serialize() for entry in entries]
+        return jsonify({**new_diary.serialize(), 'entries':serialized_entries, 'success':True})
+    except DataError:
+        return jsonify(msg="Please enter a valid date")
 
 @app.route("/diary/<int:diary_id>", methods=["GET"])
 @jwt_required()
@@ -187,7 +193,8 @@ def edit_diary(diary_id):
             if new_fooditem:
                 new_entry = DiaryEntryLine(diary_id=diary.id,
                                             fooditem_id=new_fooditem.id,
-                                            quantity=entry['quantity'])
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
                 diary.entryline.append(new_entry)
             else:
                 new_fooditem = Fooditem(food_name=entry['food_name'],
@@ -199,7 +206,8 @@ def edit_diary(diary_id):
                 db.session.commit()
                 new_entry = DiaryEntryLine(diary_id=diary.id,
                                             fooditem_id=new_fooditem.id,
-                                            quantity=entry['quantity'])
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
                 diary.entryline.append(new_entry)
         db.session.commit()
         entries = diary.entryline

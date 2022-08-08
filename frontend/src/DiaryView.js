@@ -1,8 +1,8 @@
 import React, { useEffect,useState } from "react";
 import SearchForm from "./SearchForm";
-import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import "./DiaryView.css";
+import EntryLines from "./EntryLines";
 
 const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
@@ -12,12 +12,18 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
     let [date, setDate] = useState("");
     let [calorie, setCalorie] = useState(2000);
     let [saving, setSaving] = useState(false);
+    let [showSearch, setShowSearch] = useState({show:false,
+                                                meal:""});
+    const [showModal, setShowModal] = useState(false);
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = () => setShowModal(true);
+    const [entryAdded, setEntryAdded] = useState(false);
 
 
     //Click handler for the search results. 
     //fooditem parameter is an object containing food data from NutritionIX API for the corresponding search result we clicked on.
     //A seperate api call needs to be made to get nutrition data (calories) for the specific food item. NutritionIX API requires seperate API endpoints for common food items vs branded food items. Branded food items need to be searched using nix_item_id and common food items can be searched using food_name.
-    const addEntry = async (fooditem)=>{
+    const addEntry = async (fooditem,meal)=>{
         console.log(fooditem)
         console.log(fooditem.nix_item_id)
         //Determine if fooditem is branded vs common so we can make the appropiate API call. Fooditem.nix_item_id is undefined for common food items 
@@ -33,7 +39,8 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                                     image: item.photo.thumb,
                                     brand_item_id: item.nix_item_id,
                                     isBrand: "TRUE",
-                                    quantity:1
+                                    quantity:1,
+                                    meal:meal
                                     }
                 setEntries((currentEntries)=>{
                     const copy = [...currentEntries, newEntry];
@@ -42,6 +49,7 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                 //Reset search input after clicking on a result.
                 setInput("");
                 setResults(emptyResults);
+                setEntryAdded(true)
 
             }
             catch(error){
@@ -60,6 +68,7 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
                                 quantity:1,
+                                meal:meal
                                 }
                 setEntries((currentEntries)=>{
                 const copy = [...currentEntries, newEntry];
@@ -67,7 +76,8 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                 });
                 //Reset search input after clicking on a result.    
                 setInput(""); 
-                setResults(emptyResults); 
+                setResults(emptyResults);
+                setEntryAdded(true) 
             }
             catch(error){
                 console.log(error)
@@ -160,18 +170,22 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                 <p>{date}</p>
                 <p>Calorie Goal: {calorie}</p>
                 <p>Calories to goal: {calorie-entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
-                <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results} date={date} setDate={setDate}/>
-                <ul>
-                    {entries.map((entry,idx)=>{
-                    return <li className="DiaryView-entryline">
-                            {entry.food_name}  
-                            Calories:{entry.calorie*entry.quantity} 
-                            <img src={entry.image} className="DiaryView-image"></img> 
-                            <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
-                            <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
-                        </li>
-                    })}
-                </ul>
+
+                {showSearch.show && <SearchForm addEntry={addEntry} 
+                                                   setInput={setInput} 
+                                                   input={input} 
+                                                   setResults={setResults} 
+                                                   results={results} 
+                                                   date={date} 
+                                                   setDate={setDate} 
+                                                   meal={showSearch.meal}
+                                                   handleCloseModal={handleCloseModal}
+                                                   showModal={showModal}
+                                                   entryAdded={entryAdded}
+                                                   setEntryAdded={setEntryAdded}/>}
+
+                <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
+
                 <button onClick={editDiary}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</button>
                 <button onClick={viewDiaryList}>Go Back</button>
             </div>

@@ -177,6 +177,11 @@ class DiaryEntryLine(db.Model):
         default=1
     )
 
+    meal = db.Column(
+        db.Text,
+        default="b"
+    )
+
     fooditem = db.relationship('Fooditem')
     diary = db.relationship('Diary', back_populates="entryline")
 
@@ -186,7 +191,8 @@ class DiaryEntryLine(db.Model):
             'food_name':self.fooditem.food_name,
             'calorie':self.fooditem.calorie,
             'image':self.fooditem.image,
-            'quantity':self.quantity
+            'quantity':self.quantity,
+            'meal':self.meal,
         }
 
 class Mealplan(db.Model):
@@ -215,7 +221,7 @@ class Mealplan(db.Model):
 
 
     user = db.relationship('User', back_populates='mealplans')
-    entryline = db.relationship('MealplanEntryLine', back_populates="mealplan")
+    entryline = db.relationship('MealplanEntryLine', back_populates="mealplan", cascade="all, delete")
     tags = db.relationship('Tag',
                             secondary='mealplan_tag',
                             back_populates='mealplans')
@@ -242,8 +248,24 @@ class MealplanEntryLine(db.Model):
         default=1
     )
 
+    meal = db.Column(
+        db.Text,
+        default="b"
+    )
+
     fooditem = db.relationship('Fooditem')
     mealplan = db.relationship('Mealplan', back_populates="entryline")
+
+    def serialize(self):
+        return {
+            'id':self.fooditem.id,
+            'food_name':self.fooditem.food_name,
+            'calorie':self.fooditem.calorie,
+            'image':self.fooditem.image,
+            'quantity':self.quantity,
+            'meal':self.meal,
+        }
+
 
 class Tag(db.Model):
     """Tags for dietary options"""

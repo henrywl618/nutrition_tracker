@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import SearchForm from "./SearchForm";
 import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
+import EntryLines from "./EntryLines";
 import "./DiaryForm.css";
 
 const DiaryForm = ({toggleForm, viewDiaryList})=>{
@@ -11,11 +12,18 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
     let [results, setResults] = useState(emptyResults);
     let [date, setDate] = useState("");
     let [calorie, setCalorie] = useState(2000);
+    let [error, setError] = useState("");
+    let [showSearch, setShowSearch] = useState({show:false,
+                                                meal:""});
+    const [showModal, setShowModal] = useState(false);
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = () => setShowModal(true);
+    const [entryAdded, setEntryAdded] = useState(false);
 
     //Click handler for the search results. 
     //fooditem parameter is an object containing food data from NutritionIX API for the corresponding search result we clicked on.
     //A seperate api call needs to be made to get nutrition data (calories) for the specific food item. NutritionIX API requires seperate API endpoints for common food items vs branded food items. Branded food items need to be searched using nix_item_id and common food items can be searched using food_name.
-    const addEntry = async (fooditem)=>{
+    const addEntry = async (fooditem,meal)=>{
         console.log(fooditem)
         console.log(fooditem.nix_item_id)
         //Determine if fooditem is branded vs common so we can make the appropiate API call. Fooditem.nix_item_id is undefined for common food items 
@@ -31,7 +39,8 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                                     image: item.photo.thumb,
                                     brand_item_id: item.nix_item_id,
                                     isBrand: "TRUE",
-                                    qty:1
+                                    quantity:1,
+                                    meal:meal
                                     }
                 setEntries((currentEntries)=>{
                     const copy = [...currentEntries, newEntry];
@@ -57,7 +66,8 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                                 calorie: Math.round(item.nf_calories),
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
-                                qty:1,
+                                quantity:1,
+                                meal:meal,
                                 }
                 setEntries((currentEntries)=>{
                 const copy = [...currentEntries, newEntry];
@@ -117,6 +127,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
 
     const createDiary = async ()=>{
         //Submits a post request to the backend server with entry data to create a new Diary and corresponding entries in the database.
+        setError("");
         const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
         try{
             const response = await axios({method:'post',
@@ -128,6 +139,9 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
             if(response.data.success === true){
                 viewDiaryList();
             }
+            else if(response.data.msg === "Please enter a valid date"){
+                setError("Please enter a date")
+            }
         }
         catch(error){
             console.log(error)
@@ -136,24 +150,30 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
 
     return (
         <div>
-            <SearchForm addEntry={addEntry} setInput={setInput} input={input} setResults={setResults} results={results} date={date} setDate={setDate}/>
+            <h2>Create a new diary</h2>
+            <p className="text-danger">{error}</p>
             <label htmlFor="date">Date</label>
             <input type="date" id="date" value={date} onChange={changeDate}/>
             <label htmlFor="calorie">Set Calorie Goal</label>
             <input type="number" id="calorie" value={calorie} onChange={changeCalorie}></input>
-            <ul>
-                {entries.map((entry,idx)=>{
-                return <li className="Diary-entryline">
-                         {entry.food_name}  
-                         Calories:{entry.calorie*entry.qty} 
-                         <img src={entry.image} className="Diary-image"></img> 
-                         <QuantitySelector changeQty={changeQty} index={idx} qty={entry.qty}/> 
-                         <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
-                       </li>
-                })}
-            </ul>
+
+            <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
+
             <button onClick={createDiary}>Submit Diary</button>
             <button onClick={viewDiaryList}>Go Back</button>
+
+            {showSearch.show && <SearchForm addEntry={addEntry} 
+                                                   setInput={setInput} 
+                                                   input={input} 
+                                                   setResults={setResults} 
+                                                   results={results} 
+                                                   date={date} 
+                                                   setDate={setDate} 
+                                                   meal={showSearch.meal}
+                                                   handleCloseModal={handleCloseModal}
+                                                   showModal={showModal}
+                                                   entryAdded={entryAdded}
+                                                   setEntryAdded={setEntryAdded}/>}
         </div>
     )
 };

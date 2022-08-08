@@ -67,11 +67,11 @@ const Diary = ()=>{
     },[showForm]);
 
     return(
-        <>  
+        <div>  
             {showDiaryList && <DiaryList response={response} viewForm={viewForm} viewDiary={viewDiary} deleteDiary={deleteDiary}/>}
             {showForm && <DiaryForm toggleForm={toggleForm} viewDiaryList={viewDiaryList}/>}
             {showDiary && <DiaryView viewDiaryList={viewDiaryList} diaryId={viewingDiaryId} isLoading={isLoading} setIsLoading={setIsLoading}/>}
-        </>
+        </div>
     );
 }
 
