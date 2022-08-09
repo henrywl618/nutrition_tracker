@@ -1,24 +1,23 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect,useState } from "react";
 import SearchForm from "./SearchForm";
-import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import EntryLines from "./EntryLines";
-import "./DiaryForm.css";
 
-const DiaryForm = ({toggleForm, viewDiaryList})=>{
+const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
     let [results, setResults] = useState(emptyResults);
     let [date, setDate] = useState("");
     let [calorie, setCalorie] = useState(2000);
-    let [error, setError] = useState("");
+    let [saving, setSaving] = useState(false);
     let [showSearch, setShowSearch] = useState({show:false,
                                                 meal:""});
     const [showModal, setShowModal] = useState(false);
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
     const [entryAdded, setEntryAdded] = useState(false);
+
 
     //Click handler for the search results. 
     //fooditem parameter is an object containing food data from NutritionIX API for the corresponding search result we clicked on.
@@ -49,7 +48,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 //Reset search input after clicking on a result.
                 setInput("");
                 setResults(emptyResults);
-                setEntryAdded(true);
+                setEntryAdded(true)
 
             }
             catch(error){
@@ -68,7 +67,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
                                 quantity:1,
-                                meal:meal,
+                                meal:meal
                                 }
                 setEntries((currentEntries)=>{
                 const copy = [...currentEntries, newEntry];
@@ -77,7 +76,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 //Reset search input after clicking on a result.    
                 setInput(""); 
                 setResults(emptyResults);
-                setEntryAdded(true); 
+                setEntryAdded(true) 
             }
             catch(error){
                 console.log(error)
@@ -99,72 +98,78 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
     const changeQty = (operation,index)=>{
         //Decrements or increments the quantity for an entry line
         if(operation ==='inc'){
-            let new_qty = entries[index].qty + 1
+            let new_qty = entries[index].quantity + 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }
         else if(operation ==='dec'){
             //Prevent decrementing below 1
-            let new_qty = entries[index].qty - 1 <=0 ? 1 : entries[index].qty - 1
+            let new_qty = entries[index].quantity - 1 <=0 ? 1 : entries[index].quantity - 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }
     }
 
-    const changeDate = (e)=>{
-        //Handles form changes for Date input
-        setDate(e.target.value)
-    };
 
-    const changeCalorie = (e)=>{
-        //Handles form changes for Calorie input
-        setCalorie(e.target.value)
-    };
-
-    const createDiary = async ()=>{
-        //Submits a post request to the backend server with entry data to create a new Diary and corresponding entries in the database.
-        setError("");
-        const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
+    const editMeal = async ()=>{
+        //Submits a post request to the backend server with entry data to create a new Meal and corresponding entries in the database.
+        const json = JSON.stringify({entries:[...entries],meal_id:mealId});
+        setSaving(true)
+        console.log(saving)
         try{
-            const response = await axios({method:'post',
-                                          url:"http://127.0.0.1:5000/diary",
-                                          headers:{"Content-Type":"application/json",
+            const response = await axios({method:'put',
+                                          url:`http://127.0.0.1:5000/meal/${mealId}`,
+                                          headers:{"Content-Type":"application/json",                                             
                                                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
-            //Hide the form on successful submission
-            if(response.data.success === true){
-                viewDiaryList();
-            }
-            else if(response.data.msg === "Please enter a valid date"){
-                setError("Please enter a date")
-            }
+            const entries = response.data.entries;
+            setSaving(false);
+            console.log(saving)
+            setEntries([...entries]);
+
         }
         catch(error){
+            setSaving(false);
             console.log(error)
         }
     }
 
-    return (
-        <div>
-            <h2>Create a new diary</h2>
-            <p className="text-danger">{error}</p>
-            <label htmlFor="date">Date</label>
-            <input type="date" id="date" value={date} onChange={changeDate}/>
-            <label htmlFor="calorie">Set Calorie Goal</label>
-            <input type="number" id="calorie" value={calorie} onChange={changeCalorie}></input>
+    useEffect(()=>{
+        const getMeal = async()=>{
+            try{
+                const resp = await axios.get(`http://127.0.0.1:5000/meal/${mealId}`, 
+                                            {headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}})
+                const meal = resp.data
+                setDate(meal.date)
+                setCalorie(meal.calorie_goal)
+                setEntries(meal.entries)
+                setTimeout(()=>setIsLoading(false),100);
+            }
+            catch(error){
+                console.log(error)
+            }
+        };
+        getMeal();
+    },[mealId,isLoading]);
 
-            <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
+    if (isLoading){
+        return (
+            <i className="fa-solid fa-spinner"></i>
+        )
+    }else{
+        return (
+            <div>
+                <h4>Meal Plan</h4>
+                <p>{date}</p>
+                <p>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
 
-            <button onClick={createDiary}>Submit Diary</button>
-            <button onClick={viewDiaryList}>Go Back</button>
-
-            {showSearch.show && <SearchForm addEntry={addEntry} 
+                {showSearch.show && <SearchForm addEntry={addEntry} 
                                                    setInput={setInput} 
                                                    input={input} 
                                                    setResults={setResults} 
@@ -176,8 +181,14 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                                                    showModal={showModal}
                                                    entryAdded={entryAdded}
                                                    setEntryAdded={setEntryAdded}/>}
-        </div>
-    )
+
+                <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
+
+                <button onClick={editMeal}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</button>
+                <button onClick={viewMealList}>Go Back</button>
+            </div>
+        )
+    }
 };
 
-export default DiaryForm;
+export default MealView;

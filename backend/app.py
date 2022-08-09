@@ -235,3 +235,63 @@ def delete_diary(diary_id):
     else:
         return jsonify(msg="Not authorized"),401
 
+@app.route("/meal", methods=['GET'])
+@jwt_required()
+def view_meals():
+    """ Returns a list of all mealplans """
+    meals = Mealplan.query.all()
+    serialized_meals = [meal.serialize() for meal in meals]
+    return jsonify(serialized_meals)
+
+@app.route("/meal", methods=['POST'])
+@jwt_required()
+def create_meal():
+    """ Creates a new meal for the given user and form data"""
+    try:
+        data = request.json
+        print(data)
+        new_meal = Mealplan(user_id=current_user.id,
+                        title=data['title'],
+                        header_image=data['header_image'],)
+        db.session.add(new_meal)
+        db.session.commit()
+        # Append a new entryline to the new meal. A new fooditem is created if it does not already exist on the server database.
+        for entry in data['entries']:
+            new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
+            if new_fooditem:
+                new_entry = MealplanEntryLine(mealplan_id=new_meal.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
+                new_meal.entryline.append(new_entry)
+            else:
+                new_fooditem = Fooditem(food_name=entry['food_name'],
+                                        calorie=entry['calorie'],
+                                        isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
+                                        brand_item_id = entry.get('brand_item_id'),
+                                        image=entry['image'])
+                db.session.add(new_fooditem)
+                db.session.commit()
+                new_entry = MealplanEntryLine(mealplan_id=new_meal.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
+                new_meal.entryline.append(new_entry)
+        db.session.commit()
+        entries = new_meal.entryline
+        serialized_entries = [entry.serialize() for entry in entries]
+        return jsonify({**new_meal.serialize(), 'entries':serialized_entries, 'success':True})
+    except Exception:
+        return jsonify(msg="Error occurred")
+
+@app.route("/meal/<int:meal_id>", methods=["GET"])
+@jwt_required()
+def view_meal(meal_id):
+    """ Return data for a specific mealplan """
+    meal = Mealplan.query.get_or_404(meal_id)
+    entries = meal.entryline
+    serialized_entries = [entry.serialize() for entry in entries]
+    return jsonify({**meal.serialize(),'entries':serialized_entries})
+
+
+

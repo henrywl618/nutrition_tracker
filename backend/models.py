@@ -225,6 +225,13 @@ class Mealplan(db.Model):
     tags = db.relationship('Tag',
                             secondary='mealplan_tag',
                             back_populates='mealplans')
+    
+    def serialize(self):
+        return{
+            'id':self.id,
+            'title':self.title,
+            'header_image':self.header_image,
+        }
 
 
 class MealplanEntryLine(db.Model):

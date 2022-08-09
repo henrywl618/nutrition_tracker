@@ -3,15 +3,15 @@ import SearchForm from "./SearchForm";
 import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import EntryLines from "./EntryLines";
-import "./DiaryForm.css";
+// import "./MealForm.css";
 
-const DiaryForm = ({toggleForm, viewDiaryList})=>{
+const MealForm = ({toggleForm, viewMealList})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
     let [results, setResults] = useState(emptyResults);
-    let [date, setDate] = useState("");
-    let [calorie, setCalorie] = useState(2000);
+    let [title, setTitle] = useState("");
+    let [image, setImage] = useState("");
     let [error, setError] = useState("");
     let [showSearch, setShowSearch] = useState({show:false,
                                                 meal:""});
@@ -99,50 +99,50 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
     const changeQty = (operation,index)=>{
         //Decrements or increments the quantity for an entry line
         if(operation ==='inc'){
-            let new_qty = entries[index].qty + 1
+            let new_qty = entries[index].quantity + 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }
         else if(operation ==='dec'){
             //Prevent decrementing below 1
-            let new_qty = entries[index].qty - 1 <=0 ? 1 : entries[index].qty - 1
+            let new_qty = entries[index].quantity - 1 <=0 ? 1 : entries[index].quantity - 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }
     }
 
-    const changeDate = (e)=>{
+    const changeTitle = (e)=>{
         //Handles form changes for Date input
-        setDate(e.target.value)
+        setTitle(e.target.value)
     };
 
-    const changeCalorie = (e)=>{
+    const changeImage = (e)=>{
         //Handles form changes for Calorie input
-        setCalorie(e.target.value)
+        setImage(e.target.value)
     };
 
-    const createDiary = async ()=>{
-        //Submits a post request to the backend server with entry data to create a new Diary and corresponding entries in the database.
+    const createMeal = async ()=>{
+        //Submits a post request to the backend server with entry data to create a new Meal and corresponding entries in the database.
         setError("");
-        const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
+        const json = JSON.stringify({entries:[...entries],title:title,header_image:image});
         try{
             const response = await axios({method:'post',
-                                          url:"http://127.0.0.1:5000/diary",
+                                          url:"http://127.0.0.1:5000/meal",
                                           headers:{"Content-Type":"application/json",
                                                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
             //Hide the form on successful submission
             if(response.data.success === true){
-                viewDiaryList();
+                viewMealList();
             }
-            else if(response.data.msg === "Please enter a valid date"){
-                setError("Please enter a date")
+            else {
+                setError(response.data.msg)
             }
         }
         catch(error){
@@ -152,25 +152,26 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
 
     return (
         <div>
-            <h2>Create a new diary</h2>
+            <h2>Create a new meal</h2>
             <p className="text-danger">{error}</p>
-            <label htmlFor="date">Date</label>
-            <input type="date" id="date" value={date} onChange={changeDate}/>
-            <label htmlFor="calorie">Set Calorie Goal</label>
-            <input type="number" id="calorie" value={calorie} onChange={changeCalorie}></input>
+            <label htmlFor="title">Title</label>
+            <input type="title" id="title" value={title} onChange={changeTitle}/>
+            <label htmlFor="image"> Header Image </label>
+            <input type="url" id="image" value={image} onChange={changeImage}></input>
 
+            <p>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
             <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
 
-            <button onClick={createDiary}>Submit Diary</button>
-            <button onClick={viewDiaryList}>Go Back</button>
+            <button onClick={createMeal}>Submit Meal</button>
+            <button onClick={viewMealList}>Go Back</button>
 
             {showSearch.show && <SearchForm addEntry={addEntry} 
                                                    setInput={setInput} 
                                                    input={input} 
                                                    setResults={setResults} 
                                                    results={results} 
-                                                   date={date} 
-                                                   setDate={setDate} 
+                                                   title={title} 
+                                                   setTitle={setTitle} 
                                                    meal={showSearch.meal}
                                                    handleCloseModal={handleCloseModal}
                                                    showModal={showModal}
@@ -180,4 +181,4 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
     )
 };
 
-export default DiaryForm;
+export default MealForm;
