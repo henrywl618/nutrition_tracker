@@ -1,11 +1,10 @@
 import React from "react";
-import {
-  Nav,
-  NavItem,
-  NavLink,
-} from "reactstrap";
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 
-const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView}) => {
+
+const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
 
   const logout = ()=>{
     localStorage.removeItem("accessToken");
@@ -13,44 +12,31 @@ const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView}) => {
   };
 
   return (
-    <Nav tabs>
-      <NavItem>
-        <NavLink active href="#">
-          Food Diary
-        </NavLink>
-      </NavItem>
-      {!loggedIn && <>
-        <NavItem>
-          <NavLink onClick={()=>setCurrentView('signup')}>Signup</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink onClick={()=>setCurrentView('login')}>Login</NavLink>
-        </NavItem>
-      </>}
-      {
-        loggedIn &&
-        <>
-        <NavItem>
-          <NavLink onClick={()=>setCurrentView('diary')}>Daily Food Diaries</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink onClick={()=>setCurrentView('mealplan')}>Meal Plans</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink disabled href="#">
-            User Profile
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink onClick={logout}>
-            Logout
-          </NavLink>
-        </NavItem>        
-        </>
-      }
-
-    </Nav>
-  );
+    <Navbar expand='lg'>
+      <Container>
+      <Navbar.Brand href="#home">Nutrition Tracker</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav" className="">
+          <Nav className="me-auto ">
+            {loggedIn &&
+            <>
+            <Nav.Link onClick={()=>setCurrentView('diary')}>Daily Food Diaries</Nav.Link>
+            <Nav.Link onClick={()=>setCurrentView('mealplan')}>Mealplans</Nav.Link>
+            </>
+            }
+          </Nav>
+          <Nav className="justify-content-end">
+            {!loggedIn &&
+            <>
+            <Nav.Link onClick={()=>setCurrentView('signup')}>Signup</Nav.Link>
+            <Nav.Link onClick={()=>setCurrentView('login')}>Login</Nav.Link>
+            </>}
+            {loggedIn && <Nav.Link onClick={logout}>Logout</Nav.Link>}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  )
 };
 
 export default AppNavbar;

@@ -121,7 +121,6 @@ const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
         //Submits a post request to the backend server with entry data to create a new Meal and corresponding entries in the database.
         const json = JSON.stringify({entries:[...entries],meal_id:mealId});
         setSaving(true)
-        console.log(saving)
         try{
             const response = await axios({method:'put',
                                           url:`http://127.0.0.1:5000/meal/${mealId}`,
@@ -130,7 +129,6 @@ const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
                                           data:json})
             const entries = response.data.entries;
             setSaving(false);
-            console.log(saving)
             setEntries([...entries]);
 
         }
