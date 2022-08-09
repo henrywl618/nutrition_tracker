@@ -336,6 +336,24 @@ def edit_meal(meal_id):
     else:
         return jsonify(msg="Not authorized"),401
 
+@app.route("/meal/<int:meal_id>", methods=["DELETE"])
+@jwt_required()
+def delete_meal(meal_id):
+    """ Removes a single mealplan from the database """
+
+    # Query for a mealplan using its id and remove it from the database.
+    meal = Mealplan.query.get_or_404(meal_id)
+    user = meal.user
+    # Users can only delete their own mealplans. 
+    if user.id == current_user.id:
+        db.session.delete(meal)
+        db.session.commit()
+        # Get the new list of diaries for
+        meals = Mealplan.query.all()
+        serialized_meals = [meal.serialize() for meal in meals]
+        return jsonify(serialized_meals)
+    else:
+        return jsonify(msg="Not authorized"),401
 
 
 
