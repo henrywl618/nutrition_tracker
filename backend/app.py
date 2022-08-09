@@ -293,5 +293,49 @@ def view_meal(meal_id):
     serialized_entries = [entry.serialize() for entry in entries]
     return jsonify({**meal.serialize(),'entries':serialized_entries})
 
+@app.route("/meal/<int:meal_id>", methods=["PUT"])
+@jwt_required()
+def edit_meal(meal_id):
+    """ Edits a specific meal """
+
+    data= request.json
+    meal = Mealplan.query.get_or_404(meal_id)
+    # Users can only edit their own mealplans
+    if meal.user.id == current_user.id:
+        # Delete all current entries and create new entries passed in from the frontend
+        for entry in meal.entryline:
+            db.session.delete(entry)
+        db.session.commit()
+
+        # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
+        for entry in data['entries']:
+            new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
+            if new_fooditem:
+                new_entry = MealplanEntryLine(mealplan_id=meal.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
+                meal.entryline.append(new_entry)
+            else:
+                new_fooditem = Fooditem(food_name=entry['food_name'],
+                                        calorie=entry['calorie'],
+                                        isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
+                                        brand_item_id = entry.get('brand_item_id'),
+                                        image=entry['image'])
+                db.session.add(new_fooditem)
+                db.session.commit()
+                new_entry = MealplanEntryLine(mealplan_id=meal.id,
+                                            fooditem_id=new_fooditem.id,
+                                            quantity=entry['quantity'],
+                                            meal=entry['meal'])
+                meal.entryline.append(new_entry)
+        db.session.commit()
+        entries =  meal.entryline
+        serialized_entries = [entry.serialize() for entry in entries]
+        return jsonify({**meal.serialize(), 'entries':serialized_entries, 'success':True})
+    else:
+        return jsonify(msg="Not authorized"),401
+
+
 
 
