@@ -143,6 +143,9 @@ def create_diary():
             else:
                 new_fooditem = Fooditem(food_name=entry['food_name'],
                                         calorie=entry['calorie'],
+                                        protein=entry['protein'],
+                                        fat=entry['fat'],
+                                        carbs=entry['carbs'],
                                         isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                         brand_item_id = entry.get('brand_item_id'),
                                         image=entry['image'])
@@ -199,6 +202,9 @@ def edit_diary(diary_id):
             else:
                 new_fooditem = Fooditem(food_name=entry['food_name'],
                                         calorie=entry['calorie'],
+                                        protein=entry['protein'],
+                                        fat=entry['fat'],
+                                        carbs=entry['carbs'],
                                         isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                         brand_item_id = entry.get('brand_item_id'),
                                         image=entry['image'])
@@ -267,6 +273,9 @@ def create_meal():
             else:
                 new_fooditem = Fooditem(food_name=entry['food_name'],
                                         calorie=entry['calorie'],
+                                        protein=entry['protein'],
+                                        fat=entry['fat'],
+                                        carbs=entry['carbs'],
                                         isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                         brand_item_id = entry.get('brand_item_id'),
                                         image=entry['image'])
@@ -319,6 +328,9 @@ def edit_meal(meal_id):
             else:
                 new_fooditem = Fooditem(food_name=entry['food_name'],
                                         calorie=entry['calorie'],
+                                        protein=entry['protein'],
+                                        fat=entry['fat'],
+                                        carbs=entry['carbs'],
                                         isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                         brand_item_id = entry.get('brand_item_id'),
                                         image=entry['image'])

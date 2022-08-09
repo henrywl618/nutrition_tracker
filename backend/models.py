@@ -99,6 +99,21 @@ class Fooditem(db.Model):
         nullable=False
     )
 
+    protein = db.Column(
+        db.Integer,
+        default=0
+    )
+
+    fat = db.Column(
+        db.Integer,
+        default=0
+    )
+
+    carbs = db.Column(
+        db.Integer,
+        default=0
+    )
+
     image = db.Column(
         db.Text
     )
@@ -118,6 +133,9 @@ class Fooditem(db.Model):
             'id':self.id,
             'food_name':self.food_name,
             'calorie':self.calorie,
+            'protein':self.protein,
+            'fat':self.fat,
+            'carbs':self.carbs,
             'image':self.image
         }
 
@@ -152,7 +170,7 @@ class Diary(db.Model):
     def serialize(self):
         return{
             'id':self.id,
-            'date':self.date,
+            'date':self.date.strftime("%b %d %Y"),
             'calorie_goal':self.calorie_goal,
         }
 
@@ -190,6 +208,9 @@ class DiaryEntryLine(db.Model):
             'id':self.fooditem.id,
             'food_name':self.fooditem.food_name,
             'calorie':self.fooditem.calorie,
+            'protein':self.fooditem.protein,
+            'fat':self.fooditem.fat,
+            'carbs':self.fooditem.carbs,
             'image':self.fooditem.image,
             'quantity':self.quantity,
             'meal':self.meal,
@@ -268,6 +289,9 @@ class MealplanEntryLine(db.Model):
             'id':self.fooditem.id,
             'food_name':self.fooditem.food_name,
             'calorie':self.fooditem.calorie,
+            'protein':self.fooditem.protein,
+            'fat':self.fooditem.fat,
+            'carbs':self.fooditem.carbs,
             'image':self.fooditem.image,
             'quantity':self.quantity,
             'meal':self.meal,
