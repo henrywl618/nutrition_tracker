@@ -1,5 +1,7 @@
 import React from "react";
 import QuantitySelector from "./QuantitySelector";
+import { Table, Container, Button } from "react-bootstrap";
+
 
 const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowModal})=>{
 
@@ -10,52 +12,133 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
     }
 
     return(
-        <ul>
-            <h3>Breakfast <button onClick={()=>handleClick("b")}><i class="fa-solid fa-plus"></i></button></h3>
+        <>
+        <Container>
+        <h4>Breakfast <Button size="sm" onClick={()=>handleClick("b")}><i class="fa-solid fa-plus"></i></Button></h4> 
+        <Table striped bordered hover size="sm" responsive >
+            <thead>
+                <tr>
+                <th>Qty</th>
+                <th>Food Name</th>
+                <th>Calories</th>
+                <th>Carbohydrates</th>
+                <th>Protein</th>
+                <th>Fat</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {entries.map((entry,idx)=>{
+                    if(entry.meal === 'b' ){
+                        return <tr className="DiaryView-entryline">
+                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
+                                    <td>{entry.calorie*entry.quantity}</td>
+                                    <td>{entry.carbs*entry.quantity}</td>
+                                    <td>{entry.protein*entry.quantity}</td>
+                                    <td>{entry.fat*entry.quantity}</td>
+                                    <td>
+                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        </td>
+                                </tr>
+                }})}
+            </tbody>
+
+            <br></br>
+
+        </Table>
+            <h4>Lunch <Button size="sm" onClick={()=>handleClick("l")}><i class="fa-solid fa-plus"></i></Button></h4>
+        <Table striped bordered hover size="sm" responsive >
+            <thead>
+                <tr>
+                <th>Qty</th>
+                <th>Food Name</th>
+                <th>Calories</th>
+                <th>Carbohydrates</th>
+                <th>Protein</th>
+                <th>Fat</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
             {entries.map((entry,idx)=>{
-                if(entry.meal === 'b' ){
-                    return <li className="DiaryView-entryline">
-                                {entry.food_name}  |  Calories:{entry.calorie*entry.quantity} 
-                                <img src={entry.image} className="DiaryView-image"></img> 
-                                <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
-                                <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
-                            </li>
-                }
-            })}
-            <h3>Lunch <button onClick={()=>handleClick("l")}><i class="fa-solid fa-plus"></i></button></h3>
-            {entries.map((entry, idx)=>{
-                if(entry.meal === 'l' ){
-                    return <li className="DiaryView-entryline">
-                                {entry.food_name}  | Calories:{entry.calorie*entry.quantity} 
-                                <img src={entry.image} className="DiaryView-image"></img> 
-                                <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
-                                <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
-                            </li>
-                }
-            })}
-            <h3>Dinner <button onClick={()=>handleClick("d")}><i class="fa-solid fa-plus"></i></button></h3>
-            {entries.map((entry, idx)=>{
-                if(entry.meal === 'd' ){
-                    return <li className="DiaryView-entryline">
-                                {entry.food_name}  | Calories:{entry.calorie*entry.quantity} 
-                                <img src={entry.image} className="DiaryView-image"></img> 
-                                <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
-                                <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
-                            </li>
-                }
-            })}
-            <h3>Snacks <button onClick={()=>handleClick("s")}><i class="fa-solid fa-plus"></i></button></h3>
-            {entries.map((entry, idx)=>{
-                if(entry.meal === 's' ){
-                    return <li className="DiaryView-entryline">
-                                {entry.food_name}  |  Calories:{entry.calorie*entry.quantity} 
-                                <img src={entry.image} className="DiaryView-image"></img> 
-                                <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
-                                <button onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></button>
-                            </li>
-                }
-            })}
-        </ul>
+                    if(entry.meal === 'l' ){
+                        return <tr className="DiaryView-entryline">
+                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
+                                    <td>{entry.calorie*entry.quantity}</td>
+                                    <td>{entry.carbs*entry.quantity}</td>
+                                    <td>{entry.protein*entry.quantity}</td>
+                                    <td>{entry.fat*entry.quantity}</td>
+                                    <td>
+                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        </td>
+                                </tr>
+                }})}
+            </tbody>
+        </Table>
+        <h4>Dinner <Button size="sm" onClick={()=>handleClick("d")}><i class="fa-solid fa-plus"></i></Button></h4>
+        <Table striped bordered hover size="sm" responsive >
+            <thead>
+                <tr>
+                <th>Qty</th>
+                <th>Food Name</th>
+                <th>Calories</th>
+                <th>Carbohydrates</th>
+                <th>Protein</th>
+                <th>Fat</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {entries.map((entry,idx)=>{
+                    if(entry.meal === 'd' ){
+                        return <tr className="DiaryView-entryline">
+                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
+                                    <td>{entry.calorie*entry.quantity}</td>
+                                    <td>{entry.carbs*entry.quantity}</td>
+                                    <td>{entry.protein*entry.quantity}</td>
+                                    <td>{entry.fat*entry.quantity}</td>
+                                    <td>
+                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        </td>
+                                </tr>
+                }})}
+            </tbody>
+        </Table>
+        <h4>Snacks <Button size="sm" onClick={()=>handleClick("s")}><i class="fa-solid fa-plus"></i></Button></h4>
+        <Table striped bordered hover size="sm" responsive >
+            <thead>
+                <tr>
+                <th>Qty</th>
+                <th>Food Name</th>
+                <th>Calories</th>
+                <th>Carbohydrates</th>
+                <th>Protein</th>
+                <th>Fat</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {entries.map((entry,idx)=>{
+                    if(entry.meal === 's' ){
+                        return <tr className="DiaryView-entryline">
+                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
+                                    <td>{entry.calorie*entry.quantity}</td>
+                                    <td>{entry.carbs*entry.quantity}</td>
+                                    <td>{entry.protein*entry.quantity}</td>
+                                    <td>{entry.fat*entry.quantity}</td>
+                                    <td>
+                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        </td>
+                                </tr>
+                }})}
+            </tbody>
+        </Table>
+        </Container>
+        </>
     )
 }
 

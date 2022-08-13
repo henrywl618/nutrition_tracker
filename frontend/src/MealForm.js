@@ -38,6 +38,9 @@ const MealForm = ({toggleForm, viewMealList})=>{
                                     calorie: Math.round(item.nf_calories),
                                     image: item.photo.thumb,
                                     brand_item_id: item.nix_item_id,
+                                    fat: Math.round(item.nf_total_fat),
+                                    carbs: Math.round(item.nf_total_carbohydrate),
+                                    protein: Math.round(item.nf_protein),
                                     isBrand: "TRUE",
                                     quantity:1,
                                     meal:meal
@@ -65,6 +68,9 @@ const MealForm = ({toggleForm, viewMealList})=>{
                 const item=response.data 
                 const newEntry = {food_name: item.food_name,
                                 calorie: Math.round(item.nf_calories),
+                                fat: Math.round(item.nf_total_fat),
+                                carbs: Math.round(item.nf_total_carbohydrate),
+                                protein: Math.round(item.nf_protein),
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
                                 quantity:1,

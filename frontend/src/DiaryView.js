@@ -36,6 +36,9 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                 const item=response.data                            
                 const newEntry = {food_name: item.food_name,
                                     calorie: Math.round(item.nf_calories),
+                                    fat: Math.round(item.nf_total_fat),
+                                    carbs: Math.round(item.nf_total_carbohydrate),
+                                    protein: Math.round(item.nf_protein),
                                     image: item.photo.thumb,
                                     brand_item_id: item.nix_item_id,
                                     isBrand: "TRUE",
@@ -65,6 +68,9 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
                 const item=response.data 
                 const newEntry = {food_name: item.food_name,
                                 calorie: Math.round(item.nf_calories),
+                                fat: Math.round(item.nf_total_fat),
+                                carbs: Math.round(item.nf_total_carbohydrate),
+                                protein: Math.round(item.nf_protein),
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
                                 quantity:1,

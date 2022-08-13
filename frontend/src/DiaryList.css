@@ -1,0 +1,16 @@
+.DiaryList-nutrition{
+    display: flex;
+    justify-content: space-between;
+}
+
+.DiaryList-nutritionlabel{
+    font-weight: bold;
+}
+
+.DiaryList-nutritiontotal{
+
+}
+
+.DiaryList-cardheader{
+    font-weight: bold;
+}

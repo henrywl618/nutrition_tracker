@@ -36,6 +36,9 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 const item=response.data                            
                 const newEntry = {food_name: item.food_name,
                                     calorie: Math.round(item.nf_calories),
+                                    fat: Math.round(item.nf_total_fat),
+                                    carbs: Math.round(item.nf_total_carbohydrate),
+                                    protein: Math.round(item.nf_protein),
                                     image: item.photo.thumb,
                                     brand_item_id: item.nix_item_id,
                                     isBrand: "TRUE",
@@ -65,6 +68,9 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 const item=response.data 
                 const newEntry = {food_name: item.food_name,
                                 calorie: Math.round(item.nf_calories),
+                                fat: Math.round(item.nf_total_fat),
+                                carbs: Math.round(item.nf_total_carbohydrate),
+                                protein: Math.round(item.nf_protein),
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
                                 quantity:1,
@@ -99,19 +105,19 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
     const changeQty = (operation,index)=>{
         //Decrements or increments the quantity for an entry line
         if(operation ==='inc'){
-            let new_qty = entries[index].qty + 1
+            let new_qty = entries[index].quantity + 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }
         else if(operation ==='dec'){
             //Prevent decrementing below 1
-            let new_qty = entries[index].qty - 1 <=0 ? 1 : entries[index].qty - 1
+            let new_qty = entries[index].quantity - 1 <=0 ? 1 : entries[index].quantity - 1
             setEntries((e)=>{
                 const copy = [...e]
-                copy[index].qty = new_qty
+                copy[index].quantity = new_qty
                 return copy
             })
         }

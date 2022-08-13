@@ -172,7 +172,23 @@ class Diary(db.Model):
             'id':self.id,
             'date':self.date.strftime("%b %d %Y"),
             'calorie_goal':self.calorie_goal,
+            'nutrition_totals':self.calc_nutrition_total()
         }
+    
+    def calc_nutrition_total(self):
+        totals = {'calories':0,
+                  'protein':0,
+                  'carbs':0,
+                  'fat':0}
+
+        for entry in self.entryline:
+            totals['calories'] = totals['calories'] + (entry.quantity * entry.fooditem.calorie)
+            totals['protein'] = totals['protein'] + (entry.quantity * entry.fooditem.protein)
+            totals['carbs'] = totals['carbs'] + (entry.quantity * entry.fooditem.carbs)
+            totals['fat'] = totals['fat'] + (entry.quantity * entry.fooditem.fat)
+        
+        return totals
+
 
 class DiaryEntryLine(db.Model):
     """Mapping Diary to EntryLine and an EntryLine to Fooditem"""

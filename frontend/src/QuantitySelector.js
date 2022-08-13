@@ -1,13 +1,15 @@
 import React from "react";
+import { Button } from "react-bootstrap";
+import "./QuantitySelector.css"
 
 const QuantitySelector = ({changeQty, qty, index})=>{
 
     return (
-        <span>
-            <button onClick={()=>changeQty('dec',index)}>-</button>
-            {qty}
-            <button onClick={()=>changeQty('inc',index)}>+</button>
-        </span>
+        <>
+            <Button size="sm" className="QS-button px-1 py-0" onClick={()=>changeQty('dec',index)}><i class="fa-solid fa-minus"></i></Button>
+            <span>{qty}</span>
+            <Button size="sm" className="QS-button px-1 py-0" onClick={()=>changeQty('inc',index)}><i class="fa-solid fa-plus"></i></Button>
+        </>
     )
 };
 
