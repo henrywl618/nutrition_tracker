@@ -3,6 +3,7 @@ import SearchForm from "./SearchForm";
 import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import EntryLines from "./EntryLines";
+import DietSelector from "./DietSelector";
 // import "./MealForm.css";
 
 const MealForm = ({toggleForm, viewMealList})=>{
@@ -12,6 +13,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
     let [results, setResults] = useState(emptyResults);
     let [title, setTitle] = useState("");
     let [image, setImage] = useState("");
+    let [tags, setTags] = useState([]);
     let [error, setError] = useState("");
     let [showSearch, setShowSearch] = useState({show:false,
                                                 meal:""});
@@ -136,7 +138,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
     const createMeal = async ()=>{
         //Submits a post request to the backend server with entry data to create a new Meal and corresponding entries in the database.
         setError("");
-        const json = JSON.stringify({entries:[...entries],title:title,header_image:image});
+        const json = JSON.stringify({entries:[...entries],title:title,header_image:image,tags:tags});
         try{
             const response = await axios({method:'post',
                                           url:"http://127.0.0.1:5000/meal",
@@ -158,7 +160,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
 
     return (
         <div>
-            <h2>Create a new meal</h2>
+            <h2>Edit Mealplan</h2>
             <p className="text-danger">{error}</p>
             <label htmlFor="title">Title</label>
             <input type="title" id="title" value={title} onChange={changeTitle}/>
@@ -166,6 +168,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
             <input type="url" id="image" value={image} onChange={changeImage}></input>
 
             <p>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
+            <DietSelector setTags={setTags}/>
             <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
 
             <button onClick={createMeal}>Submit Meal</button>

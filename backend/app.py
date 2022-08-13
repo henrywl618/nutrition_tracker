@@ -116,6 +116,7 @@ def view_diaries():
     """ Returns a list of all the users diaries """
     user = User.query.get_or_404(current_user.id)
     diaries = Diary.query.filter(Diary.user_id == user.id).order_by(Diary.date.desc()).all()
+    # Calculate nutrition totals for each particular diary to send back in the response
     serialized_diaries = [diary.serialize() for diary in diaries]
     return jsonify(serialized_diaries)
 
@@ -253,45 +254,54 @@ def view_meals():
 @jwt_required()
 def create_meal():
     """ Creates a new meal for the given user and form data"""
-    try:
-        data = request.json
-        print(data)
-        new_meal = Mealplan(user_id=current_user.id,
-                        title=data['title'],
-                        header_image=data['header_image'],)
-        db.session.add(new_meal)
-        db.session.commit()
-        # Append a new entryline to the new meal. A new fooditem is created if it does not already exist on the server database.
-        for entry in data['entries']:
-            new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
-            if new_fooditem:
-                new_entry = MealplanEntryLine(mealplan_id=new_meal.id,
-                                            fooditem_id=new_fooditem.id,
-                                            quantity=entry['quantity'],
-                                            meal=entry['meal'])
-                new_meal.entryline.append(new_entry)
-            else:
-                new_fooditem = Fooditem(food_name=entry['food_name'],
-                                        calorie=entry['calorie'],
-                                        protein=entry['protein'],
-                                        fat=entry['fat'],
-                                        carbs=entry['carbs'],
-                                        isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
-                                        brand_item_id = entry.get('brand_item_id'),
-                                        image=entry['image'])
-                db.session.add(new_fooditem)
-                db.session.commit()
-                new_entry = MealplanEntryLine(mealplan_id=new_meal.id,
-                                            fooditem_id=new_fooditem.id,
-                                            quantity=entry['quantity'],
-                                            meal=entry['meal'])
-                new_meal.entryline.append(new_entry)
-        db.session.commit()
-        entries = new_meal.entryline
-        serialized_entries = [entry.serialize() for entry in entries]
-        return jsonify({**new_meal.serialize(), 'entries':serialized_entries, 'success':True})
-    except Exception:
-        return jsonify(msg="Error occurred")
+    # try:
+    data = request.json
+    print(data)
+    new_meal = Mealplan(user_id=current_user.id,
+                    title=data['title'],
+                    header_image=data['header_image'],)
+    db.session.add(new_meal)
+    db.session.commit()
+
+    # Finds and adds any tags
+    tags = data['tags']
+    for tag in tags:
+        new_tag = Tag.query.get(tag)
+        new_meal.tags.append(new_tag)
+    db.session.commit()
+
+    # Append a new entryline to the new meal. A new fooditem is created if it does not already exist on the server database.
+    for entry in data['entries']:
+        new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()
+        if new_fooditem:
+            new_entry = MealplanEntryLine(mealplan_id=new_meal.id,
+                                        fooditem_id=new_fooditem.id,
+                                        quantity=entry['quantity'],
+                                        meal=entry['meal'])
+            new_meal.entryline.append(new_entry)
+        else:
+            new_fooditem = Fooditem(food_name=entry['food_name'],
+                                    calorie=entry['calorie'],
+                                    protein=entry['protein'],
+                                    fat=entry['fat'],
+                                    carbs=entry['carbs'],
+                                    isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
+                                    brand_item_id = entry.get('brand_item_id'),
+                                    image=entry['image'])
+            db.session.add(new_fooditem)
+            db.session.commit()
+            new_entry = MealplanEntryLine(mealplan_id=new_meal.id,
+                                        fooditem_id=new_fooditem.id,
+                                        quantity=entry['quantity'],
+                                        meal=entry['meal'])
+            new_meal.entryline.append(new_entry)
+    db.session.commit()
+    entries = new_meal.entryline
+    serialized_entries = [entry.serialize() for entry in entries]
+    return jsonify({**new_meal.serialize(), 'entries':serialized_entries, 'success':True})
+    # except Exception as e:
+    #     print(str(e))
+    #     return jsonify(msg="Error occurred")
 
 @app.route("/meal/<int:meal_id>", methods=["GET"])
 @jwt_required()
@@ -311,11 +321,21 @@ def edit_meal(meal_id):
     meal = Mealplan.query.get_or_404(meal_id)
     # Users can only edit their own mealplans
     if meal.user.id == current_user.id:
-        # Delete all current entries and create new entries passed in from the frontend
+        # Delete all current entries and tag associations and create new entries and tag associations passed in from the frontend
         for entry in meal.entryline:
             db.session.delete(entry)
+        tags = MealplanTag.query.filter(MealplanTag.mealplan_id == meal.id).all()
+        for tag in tags:
+            db.session.delete(tag)
         db.session.commit()
 
+        # Finds and adds any tags
+        tags = data['tags']
+        for tag in tags:
+            new_tag = Tag.query.get(tag)
+            meal.tags.append(new_tag)
+        import pdb
+        
         # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
         for entry in data['entries']:
             new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()

@@ -268,6 +268,7 @@ class Mealplan(db.Model):
             'id':self.id,
             'title':self.title,
             'header_image':self.header_image,
+            'tags': [tag.name for tag in self.tags]
         }
 
 
@@ -330,7 +331,7 @@ class Tag(db.Model):
                                 back_populates="tags")
 
 class MealplanTag(db.Model):
-    """ Conection for Mealplan <---> Tag """
+    """ Connection for Mealplan <---> Tag """
 
     __tablename__="mealplan_tag"
 

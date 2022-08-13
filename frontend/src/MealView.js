@@ -2,14 +2,17 @@ import React, { useEffect,useState } from "react";
 import SearchForm from "./SearchForm";
 import axios from "axios";
 import EntryLines from "./EntryLines";
+import DietSelector from "./DietSelector";
 
 const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
     let [results, setResults] = useState(emptyResults);
-    let [date, setDate] = useState("");
-    let [calorie, setCalorie] = useState(2000);
+    let [title, setTitle] = useState("");
+    let [image, setImage] = useState("");
+    let [tags, setTags] = useState([]);
+    let [error, setError] = useState("");
     let [saving, setSaving] = useState(false);
     let [showSearch, setShowSearch] = useState({show:false,
                                                 meal:""});
@@ -125,7 +128,7 @@ const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
 
     const editMeal = async ()=>{
         //Submits a post request to the backend server with entry data to create a new Meal and corresponding entries in the database.
-        const json = JSON.stringify({entries:[...entries],meal_id:mealId});
+        const json = JSON.stringify({entries:[...entries],meal_id:mealId, tags:tags});
         setSaving(true)
         try{
             const response = await axios({method:'put',
@@ -144,15 +147,26 @@ const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
         }
     }
 
+    const changeTitle = (e)=>{
+        //Handles form changes for Date input
+        setTitle(e.target.value)
+    };
+
+    const changeImage = (e)=>{
+        //Handles form changes for Calorie input
+        setImage(e.target.value)
+    };
+
     useEffect(()=>{
         const getMeal = async()=>{
             try{
                 const resp = await axios.get(`http://127.0.0.1:5000/meal/${mealId}`, 
                                             {headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}})
                 const meal = resp.data
-                setDate(meal.date)
-                setCalorie(meal.calorie_goal)
+                setTitle(meal.title)
+                setImage(meal.header_image)
                 setEntries(meal.entries)
+                setTags(meal.tags)
                 setTimeout(()=>setIsLoading(false),100);
             }
             catch(error){
@@ -169,17 +183,21 @@ const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     }else{
         return (
             <div>
-                <h4>Meal Plan</h4>
-                <p>{date}</p>
+                <h2>Edit Mealplan</h2>
+                <p className="text-danger">{error}</p>
+                <label htmlFor="title">Title</label>
+                <input type="title" id="title" value={title} onChange={changeTitle}/>
+                <label htmlFor="image"> Header Image </label>
+                <input type="url" id="image" value={image} onChange={changeImage}></input>
                 <p>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
+                <DietSelector setTags={setTags}
+                              inputValue={tags.map((tag)=>({value:tag,label:tag}))}/>
 
                 {showSearch.show && <SearchForm addEntry={addEntry} 
                                                    setInput={setInput} 
                                                    input={input} 
                                                    setResults={setResults} 
                                                    results={results} 
-                                                   date={date} 
-                                                   setDate={setDate} 
                                                    meal={showSearch.meal}
                                                    handleCloseModal={handleCloseModal}
                                                    showModal={showModal}
