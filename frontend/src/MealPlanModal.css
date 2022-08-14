@@ -1,0 +1,37 @@
+.Modal-listimg{
+    height: 35px;
+    width: 35px;
+}
+
+.Modal-headerimg{
+   object-fit: cover;
+}
+
+.Modal-headerwrapper{
+    display: flex;
+    flex-direction: column-reverse;
+    max-width: 100%;
+}
+
+.Modal-title{
+    text-align: center;
+    color: white;
+    background-color: rgb(0,0,0,0.5);
+    position: absolute;
+    width: 100%;
+}
+
+.Modal-close{
+    position: absolute;
+    margin: 5px !important;
+}
+
+.Modal-header{
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+}
+
+.Modal-item{
+    text-transform: capitalize;
+}

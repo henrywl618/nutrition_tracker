@@ -2,6 +2,7 @@ import React from "react";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import "./AppNavBar.css"
 
 
 const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
@@ -12,9 +13,9 @@ const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
   };
 
   return (
-    <Navbar expand='lg'>
+    <Navbar className="AppNavBar" expand='lg'>
       <Container>
-      <Navbar.Brand href="#home">Nutrition Tracker</Navbar.Brand>
+      <Navbar.Brand href="#home"><i className="fa-solid fa-utensils mx-2"></i>Nutrition Tracker</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="">
           <Nav className="me-auto ">

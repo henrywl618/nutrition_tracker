@@ -18,7 +18,7 @@ function App() {
   });
 
   return (
-    <div className="App">
+    <div className="App container">
       <AppNavbar setLoggedIn={setLoggedIn} loggedIn={loggedIn} setCurrentView={setCurrentView}/>
       {loggedIn && currentView === 'diary' && <Diary />}
       {loggedIn && currentView === 'mealplan' && <Meal />}

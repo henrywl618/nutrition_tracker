@@ -2,6 +2,7 @@
   text-align: center;
   display: flex;
   flex-direction: column;
+  font-family: 'Alice';
 }
 
 .App-logo {
@@ -37,4 +38,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@font-face {
+  font-family: 'Alice';
+  src: url('Alice-Regular.ttf');
 }

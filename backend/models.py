@@ -253,7 +253,8 @@ class Mealplan(db.Model):
     )
 
     header_image = db.Column(
-        db.Text
+        db.Text,
+        default="https://www.dirtyapronrecipes.com/wp-content/uploads/2015/10/food-placeholder.png"
     )
 
 

@@ -63,7 +63,7 @@ const Meal = ()=>{
         };
         fetchData();
 
-    },[showForm]);
+    },[showForm, showMealList]);
 
     return(
         <div className="Meal">  

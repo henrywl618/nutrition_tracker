@@ -160,7 +160,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
 
     return (
         <div>
-            <h2>Edit Mealplan</h2>
+            <h2>Create a new meal</h2>
             <p className="text-danger">{error}</p>
             <label htmlFor="title">Title</label>
             <input type="title" id="title" value={title} onChange={changeTitle}/>

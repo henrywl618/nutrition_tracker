@@ -1,0 +1,24 @@
+.MealList-cardimage{
+    object-fit: cover;
+    min-height: 100%;
+}
+
+.MealList-cardimagecontainer{
+    display: flex;
+    flex-direction: column-reverse;
+    min-height: 80%
+}
+
+.MealList-tags{
+    position: absolute;
+    y: 100%;
+}
+
+
+.MealList-card:hover{
+    cursor: pointer;
+    border: 1px blue solid;
+}
+
+
+

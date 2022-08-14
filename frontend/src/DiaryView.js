@@ -139,6 +139,7 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
             setSaving(false);
             console.log(saving)
             setEntries([...entries]);
+            viewDiaryList(); 
 
         }
         catch(error){

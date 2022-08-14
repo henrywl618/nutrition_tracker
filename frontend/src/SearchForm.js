@@ -24,7 +24,7 @@ const SearchForm = ({addEntry, setInput, input, results, setResults, meal, showM
 
     return(
         <Modal show={showModal} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
+            <Modal.Header className="SearchForm-header" closeButton>
                 <Modal.Title>
                 {meal === 'b' ? <h3>Add a breakfast item</h3> : null}
                 {meal === 'l' ? <h3>Add a lunch item</h3> : null}

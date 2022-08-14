@@ -321,6 +321,10 @@ def edit_meal(meal_id):
     meal = Mealplan.query.get_or_404(meal_id)
     # Users can only edit their own mealplans
     if meal.user.id == current_user.id:
+        # Update title and image
+        meal.title = data['title']
+        meal.header_image = data['image']
+
         # Delete all current entries and tag associations and create new entries and tag associations passed in from the frontend
         for entry in meal.entryline:
             db.session.delete(entry)
@@ -335,7 +339,7 @@ def edit_meal(meal_id):
             new_tag = Tag.query.get(tag)
             meal.tags.append(new_tag)
         import pdb
-        
+
         # Append a new entryline to the new diary. A new fooditem is created if it does not already exist on the server database.
         for entry in data['entries']:
             new_fooditem = Fooditem.query.filter(Fooditem.food_name == entry['food_name']).one_or_none()

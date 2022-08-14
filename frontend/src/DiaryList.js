@@ -7,11 +7,12 @@ const DiaryList = ({response, viewForm, viewDiary, deleteDiary})=>{
     return(
         <>
 
-        <h4>Daily Food Diaries</h4>
-        <Button onClick={viewForm}>Create a new diary</Button>
-        <br></br>
-        <h5 className="mt-5">Previous Entries</h5>
+
         <Container>
+            <h4>Daily Food Diaries</h4>
+            <Button onClick={viewForm}>Create a new diary</Button>
+            <br></br>
+            <h5 className="mt-5">Previous Entries</h5>
             <div className="row justify-content-center">
             {response && response.map((diary)=>{
                 return <Card className="col-xl-3 col-md-4 col-8 m-3 p-0">
@@ -26,7 +27,7 @@ const DiaryList = ({response, viewForm, viewDiary, deleteDiary})=>{
                         </Card.Body>
                         <Card.Footer>
                             <Button className="m-1" size="sm" onClick={()=>viewDiary(true,diary.id)}>View / Edit</Button>
-                            <Button className="m-1" size="sm" onClick={()=>deleteDiary(diary.id)}>Delete <i className="fa-solid fa-trash-can"></i></Button>
+                            <Button className="m-1" size="sm" variant="danger" onClick={()=>deleteDiary(diary.id)}><i className="fa-solid fa-trash-can"></i></Button>
                         </Card.Footer>
                        </Card>
                 })}
