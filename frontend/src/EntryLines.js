@@ -111,7 +111,7 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
         <h4>Snacks <Button size="sm" onClick={()=>handleClick("s")}><i class="fa-solid fa-plus"></i></Button></h4>
         <Table striped bordered hover size="sm" responsive >
             <thead>
-                <tr>
+            <tr>
                     <th className="w-10">Qty</th>
                     <th  className="w-40">Food Name</th>
                     <th className="w-10">Calories</th>

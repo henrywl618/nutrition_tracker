@@ -27,6 +27,7 @@ const LoginForm = ({setLoggedIn, setCurrentView})=>{
                                         password:formData.password}})
             if (resp.data.msg === "Login successful"){
                 localStorage.setItem('accessToken',resp.data.access_token);
+                localStorage.setItem('user',resp.data.user);
                 setLoggedIn(true);
                 setCurrentView({view:"diary"});
             }

@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from "react";
-import {Modal, Button, ModalBody} from "react-bootstrap";
+import {Modal, Button, ModalBody, ModalFooter} from "react-bootstrap";
 import axios from "axios";
 import "./MealPlanModal.css"
 
-const MealPlanModal = ({show, setShow, mealId})=>{
-    let [entries, setEntries] = useState([])
+const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
+    let [entries, setEntries] = useState([]);
+    let [nutrition, setNutrition] = useState({});
     let [title, setTitle] = useState("");
     let [image, setImage] = useState("");
+    let [canEdit, setCanEdit] = useState(false);
     let [tags, setTags] = useState([]);
+
+    const handleEdit = ()=>{
+        setShow(false);
+        editMeal(mealId);
+        
+    };
+
+    const handleDelete = ()=>{
+        deleteMeal(mealId);
+        setShow(false);
+    };
 
     useEffect(()=>{
         const getMeal = async()=>{
@@ -18,6 +31,8 @@ const MealPlanModal = ({show, setShow, mealId})=>{
                 setTitle(meal.title)
                 setImage(meal.header_image)
                 setEntries(meal.entries)
+                setNutrition(meal.nutrition_totals)
+                setCanEdit(meal.can_edit)
                 setTags(meal.tags)
             }
             catch(error){
@@ -49,10 +64,10 @@ const MealPlanModal = ({show, setShow, mealId})=>{
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span className="badge rounded-pill bg-success">2000</span></td>
-                            <td><span className="badge rounded-pill bg-success">200</span></td>
-                            <td><span className="badge rounded-pill bg-success">200</span></td>
-                            <td><span className="badge rounded-pill bg-success">200</span></td>
+                            <td><span className="badge rounded-pill nutrition">{nutrition.calories}</span></td>
+                            <td><span className="badge rounded-pill nutrition">{nutrition.protein} g</span></td>
+                            <td><span className="badge rounded-pill nutrition">{nutrition.carbs} g</span></td>
+                            <td><span className="badge rounded-pill nutrition">{nutrition.fat} g</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -123,6 +138,14 @@ const MealPlanModal = ({show, setShow, mealId})=>{
                 </ul>
                 
             </Modal.Body>
+            {
+            canEdit &&
+            <ModalFooter>
+                <Button className="m-1 bluebutton" size="sm" onClick={handleEdit}>Edit</Button>
+                <Button className="m-1 redbutton" size="sm" variant="danger" onClick={handleDelete}><i className="fa-solid fa-trash-can"></i></Button>
+            </ModalFooter>
+            }
+
         </Modal>
     )
 }

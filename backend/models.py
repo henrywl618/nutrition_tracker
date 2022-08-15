@@ -42,7 +42,6 @@ class User(db.Model):
     def serialize(self):
         return {'id':self.id,
                 'username':self.username,
-                'password':self.password,
                 'email':self.email,}
 
     @classmethod
@@ -269,8 +268,23 @@ class Mealplan(db.Model):
             'id':self.id,
             'title':self.title,
             'header_image':self.header_image,
-            'tags': [tag.name for tag in self.tags]
+            'tags': [tag.name for tag in self.tags],
+            'nutrition_totals':self.calc_nutrition_total(),
         }
+    
+    def calc_nutrition_total(self):
+        totals = {'calories':0,
+                    'protein':0,
+                    'carbs':0,
+                    'fat':0}
+
+        for entry in self.entryline:
+            totals['calories'] = totals['calories'] + (entry.quantity * entry.fooditem.calorie)
+            totals['protein'] = totals['protein'] + (entry.quantity * entry.fooditem.protein)
+            totals['carbs'] = totals['carbs'] + (entry.quantity * entry.fooditem.carbs)
+            totals['fat'] = totals['fat'] + (entry.quantity * entry.fooditem.fat)
+        
+        return totals
 
 
 class MealplanEntryLine(db.Model):

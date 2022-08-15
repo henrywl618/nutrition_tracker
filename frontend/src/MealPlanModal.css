@@ -68,7 +68,8 @@
     src: url('Alice-Regular.ttf');
   }
 
-.Modal-body{
-
+td span.nutrition{
+    background-color: #18F2B2;
+    color: black !important;
 }
   

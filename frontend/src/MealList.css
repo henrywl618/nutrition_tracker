@@ -14,11 +14,19 @@
     y: 100%;
 }
 
-
 .MealList-card:hover{
     cursor: pointer;
     border: 1px blue solid;
 }
 
+.Mealist-badge{
+    background-color: #18F2B2 !important;
+    color: black;
+}
+
+.MealList-cardbody{
+    background-color: #18F2B2;
+    overflow: hidden;
+}
 
 

@@ -13,7 +13,7 @@ const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
   };
 
   return (
-    <Navbar className="AppNavBar" expand='lg'>
+    <Navbar className="AppNavBar mb-3" expand='lg'>
       <Container>
       <Navbar.Brand href="#home" className="Navbar-brand"><i className="fa-solid fa-utensils mx-2"></i>Nutrition Tracker</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -32,7 +32,12 @@ const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
             <Nav.Link onClick={()=>setCurrentView({view:'signup'})}>Signup</Nav.Link>
             <Nav.Link onClick={()=>setCurrentView({view:'login'})}>Login</Nav.Link>
             </>}
-            {loggedIn && <Nav.Link onClick={logout}>Logout</Nav.Link>}
+            {loggedIn && 
+            <>
+            <Nav.Link onClick={()=>setCurrentView({view:'user'})}>{localStorage.getItem('user')}</Nav.Link>
+            <Nav.Link onClick={logout}>Logout</Nav.Link>
+            </>}
+            
           </Nav>
         </Navbar.Collapse>
       </Container>

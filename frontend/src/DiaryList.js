@@ -10,7 +10,7 @@ const DiaryList = ({response, viewForm, viewDiary, deleteDiary})=>{
 
         <Container>
             <h4>Daily Food Diaries</h4>
-            <Button onClick={viewForm}>Create a new diary</Button>
+            <Button className="bluebutton" onClick={viewForm}>Create a new diary</Button>
             <br></br>
             <h5 className="mt-5">Previous Entries</h5>
             <div className="row justify-content-center">
@@ -25,9 +25,9 @@ const DiaryList = ({response, viewForm, viewDiary, deleteDiary})=>{
                             <div className="DiaryList-nutrition"><span className="DiaryList-nutritionlabel">Carbohydrates</span><span className="DiaryList-nutritiontotal">{diary.nutrition_totals.carbs}</span></div>
                             <div className="DiaryList-nutrition"><span className="DiaryList-nutritionlabel">Fat</span><span className="DiaryList-nutritiontotal">{diary.nutrition_totals.fat}</span></div>
                         </Card.Body>
-                        <Card.Footer>
-                            <Button className="m-1" size="sm" onClick={()=>viewDiary(true,diary.id)}>View / Edit</Button>
-                            <Button className="m-1" size="sm" variant="danger" onClick={()=>deleteDiary(diary.id)}><i className="fa-solid fa-trash-can"></i></Button>
+                        <Card.Footer className="DiaryList-cardfooter">
+                            <Button className="m-1 bluebutton" size="sm" onClick={()=>viewDiary(true,diary.id)}>View / Edit</Button>
+                            <Button className="m-1 redbutton" size="sm" variant="danger" onClick={()=>deleteDiary(diary.id)}><i className="fa-solid fa-trash-can"></i></Button>
                         </Card.Footer>
                        </Card>
                 })}

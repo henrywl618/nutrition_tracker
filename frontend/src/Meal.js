@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MealForm from "./MealForm";
 import axios from "axios";
 import { useToggleBool } from "./hooks";
-import MealView from "./MealView";
+import MealEdit from "./MealEdit";
 import MealList from "./MealList";
 
 const Meal = ()=>{
@@ -23,9 +23,9 @@ const Meal = ()=>{
         } 
     }
 
-    const viewMeal = (boolean, mealId)=>{
-        // Click handler for selecting a meal to view
-        setShowMeal(boolean);
+    const editMeal = (mealId)=>{
+        // Click handler for showing mealplan edit form
+        setShowMeal(true);
         setViewingMealId(mealId);
         setIsLoading(true);
         setShowMealList(false);
@@ -67,9 +67,9 @@ const Meal = ()=>{
 
     return(
         <div className="Meal">  
-            {showMealList && <MealList response={response} viewForm={viewForm} viewMeal={viewMeal} deleteMeal={deleteMeal}/>}
+            {showMealList && <MealList response={response} viewForm={viewForm} editMeal={editMeal} deleteMeal={deleteMeal}/>}
             {showForm && <MealForm toggleForm={toggleForm} viewMealList={viewMealList}/>}
-            {showMeal && <MealView viewMealList={viewMealList} mealId={viewingMealId} isLoading={isLoading} setIsLoading={setIsLoading}/>}
+            {showMeal && <MealEdit viewMealList={viewMealList} mealId={viewingMealId} isLoading={isLoading} setIsLoading={setIsLoading}/>}
         </div>
     );
 }

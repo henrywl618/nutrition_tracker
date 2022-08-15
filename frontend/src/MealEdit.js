@@ -4,7 +4,7 @@ import axios from "axios";
 import EntryLines from "./EntryLines";
 import DietSelector from "./DietSelector";
 
-const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
+const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
@@ -214,4 +214,4 @@ const MealView = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     }
 };
 
-export default MealView;
+export default MealEdit;

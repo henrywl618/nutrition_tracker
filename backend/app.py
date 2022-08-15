@@ -41,7 +41,7 @@ def signup():
             email=request.json.get("email") )
         db.session.commit()
         access_token = create_access_token(identity=new_user)
-        response = jsonify(msg="Signup successful",access_token=access_token)
+        response = jsonify(msg="Signup successful",access_token=access_token,user=new_user.username)
         return response
     except IntegrityError:
         return jsonify(msg="Username already taken")
@@ -56,7 +56,7 @@ def login():
         return jsonify({"msg": "Bad username or password"}), 401
 
     access_token = create_access_token(identity=user)
-    response = jsonify(msg="Login successful",access_token=access_token)
+    response = jsonify(msg="Login successful",access_token=access_token,user=user.username)
     return response
 
 # Register a callback function that takes whatever object is passed in as the
@@ -309,8 +309,9 @@ def view_meal(meal_id):
     """ Return data for a specific mealplan """
     meal = Mealplan.query.get_or_404(meal_id)
     entries = meal.entryline
+    edit_meal = current_user == meal.user
     serialized_entries = [entry.serialize() for entry in entries]
-    return jsonify({**meal.serialize(),'entries':serialized_entries})
+    return jsonify({**meal.serialize(),'entries':serialized_entries, 'can_edit':edit_meal})
 
 @app.route("/meal/<int:meal_id>", methods=["PUT"])
 @jwt_required()
@@ -390,6 +391,14 @@ def delete_meal(meal_id):
         return jsonify(serialized_meals)
     else:
         return jsonify(msg="Not authorized"),401
+
+@app.route("/user", methods=["GET"])
+@jwt_required()
+def view_user():
+    """ Returns user information and the mealplans they created """
+    meals = current_user.mealplans
+    serialized_meals = [meal.serialize() for meal in meals]
+    return jsonify(user=current_user.serialize(),meals=serialized_meals)
 
 
 
