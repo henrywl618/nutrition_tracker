@@ -8,7 +8,7 @@ import Meal from './Meal';
 
 
 function App() {
-  let [currentView,setCurrentView] = useState("diary");
+  let [currentView,setCurrentView] = useState({view:"diary"});
   let [loggedIn, setLoggedIn] = useState(false);
   
   useEffect(()=>{
@@ -18,12 +18,12 @@ function App() {
   });
 
   return (
-    <div className="App container">
+    <div className="App">
       <AppNavbar setLoggedIn={setLoggedIn} loggedIn={loggedIn} setCurrentView={setCurrentView}/>
-      {loggedIn && currentView === 'diary' && <Diary />}
-      {loggedIn && currentView === 'mealplan' && <Meal />}
-      {!loggedIn && currentView === 'signup' &&   <SignupForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
-      {!loggedIn && currentView === 'login' &&   <LoginForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
+      {loggedIn && currentView.view === 'diary' && <Diary />}
+      {loggedIn && currentView.view === 'mealplan' && <Meal />}
+      {!loggedIn && currentView.view === 'signup' &&   <SignupForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
+      {!loggedIn && currentView.view === 'login' &&   <LoginForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
     </div>
   );
 }

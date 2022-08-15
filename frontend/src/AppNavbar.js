@@ -15,22 +15,22 @@ const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
   return (
     <Navbar className="AppNavBar" expand='lg'>
       <Container>
-      <Navbar.Brand href="#home"><i className="fa-solid fa-utensils mx-2"></i>Nutrition Tracker</Navbar.Brand>
+      <Navbar.Brand href="#home" className="Navbar-brand"><i className="fa-solid fa-utensils mx-2"></i>Nutrition Tracker</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="">
           <Nav className="me-auto ">
             {loggedIn &&
             <>
-            <Nav.Link onClick={()=>setCurrentView('diary')}>Daily Food Diaries</Nav.Link>
-            <Nav.Link onClick={()=>setCurrentView('mealplan')}>Mealplans</Nav.Link>
+            <Nav.Link onClick={()=>setCurrentView({view:'diary'})}>Daily Food Diaries</Nav.Link>
+            <Nav.Link onClick={()=>setCurrentView({view:'mealplan'})}>Mealplans</Nav.Link>
             </>
             }
           </Nav>
           <Nav className="justify-content-end">
             {!loggedIn &&
             <>
-            <Nav.Link onClick={()=>setCurrentView('signup')}>Signup</Nav.Link>
-            <Nav.Link onClick={()=>setCurrentView('login')}>Login</Nav.Link>
+            <Nav.Link onClick={()=>setCurrentView({view:'signup'})}>Signup</Nav.Link>
+            <Nav.Link onClick={()=>setCurrentView({view:'login'})}>Login</Nav.Link>
             </>}
             {loggedIn && <Nav.Link onClick={logout}>Logout</Nav.Link>}
           </Nav>

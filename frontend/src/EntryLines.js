@@ -1,6 +1,7 @@
 import React from "react";
 import QuantitySelector from "./QuantitySelector";
 import { Table, Container, Button } from "react-bootstrap";
+import "./EntryLine.css";
 
 
 const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowModal})=>{
@@ -15,23 +16,23 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
         <>
         <Container>
         <h4>Breakfast <Button size="sm" onClick={()=>handleClick("b")}><i class="fa-solid fa-plus"></i></Button></h4> 
-        <Table striped bordered hover size="sm" responsive >
+        <Table striped bordered hover size="sm" responsive="xl" >
             <thead>
                 <tr>
-                <th>Qty</th>
-                <th>Food Name</th>
-                <th>Calories</th>
-                <th>Carbohydrates</th>
-                <th>Protein</th>
-                <th>Fat</th>
-                <th>Actions</th>
+                <th className="w-10">Qty</th>
+                <th  className="w-40">Food Name</th>
+                <th className="w-10">Calories</th>
+                <th className="w-10">Carbohydrates</th>
+                <th className="w-10">Protein</th>
+                <th className="w-10">Fat</th>    
+                <th className="w-10">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {entries.map((entry,idx)=>{
                     if(entry.meal === 'b' ){
                         return <tr className="DiaryView-entryline">
-                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <td className=""><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
                                     <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
                                     <td>{entry.calorie*entry.quantity}</td>
                                     <td>{entry.carbs*entry.quantity}</td>
@@ -51,13 +52,13 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
         <Table striped bordered hover size="sm" responsive >
             <thead>
                 <tr>
-                <th>Qty</th>
-                <th>Food Name</th>
-                <th>Calories</th>
-                <th>Carbohydrates</th>
-                <th>Protein</th>
-                <th>Fat</th>
-                <th>Actions</th>
+                    <th className="w-10">Qty</th>
+                    <th  className="w-40">Food Name</th>
+                    <th className="w-10">Calories</th>
+                    <th className="w-10">Carbohydrates</th>
+                    <th className="w-10">Protein</th>
+                    <th className="w-10">Fat</th>    
+                    <th className="w-10">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,13 +82,13 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
         <Table striped bordered hover size="sm" responsive >
             <thead>
                 <tr>
-                <th>Qty</th>
-                <th>Food Name</th>
-                <th>Calories</th>
-                <th>Carbohydrates</th>
-                <th>Protein</th>
-                <th>Fat</th>
-                <th>Actions</th>
+                    <th className="w-10">Qty</th>
+                    <th  className="w-40">Food Name</th>
+                    <th className="w-10">Calories</th>
+                    <th className="w-10">Carbohydrates</th>
+                    <th className="w-10">Protein</th>
+                    <th className="w-10">Fat</th>    
+                    <th className="w-10">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,13 +112,13 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
         <Table striped bordered hover size="sm" responsive >
             <thead>
                 <tr>
-                <th>Qty</th>
-                <th>Food Name</th>
-                <th>Calories</th>
-                <th>Carbohydrates</th>
-                <th>Protein</th>
-                <th>Fat</th>
-                <th>Actions</th>
+                    <th className="w-10">Qty</th>
+                    <th  className="w-40">Food Name</th>
+                    <th className="w-10">Calories</th>
+                    <th className="w-10">Carbohydrates</th>
+                    <th className="w-10">Protein</th>
+                    <th className="w-10">Fat</th>    
+                    <th className="w-10">Actions</th>
                 </tr>
             </thead>
             <tbody>

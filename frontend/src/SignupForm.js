@@ -30,7 +30,7 @@ const SignupForm = ({setLoggedIn, setCurrentView})=>{
             if (resp.data.msg === "Signup successful"){
                 localStorage.setItem('accessToken',resp.data.access_token);
                 setLoggedIn(true);
-                setCurrentView("diary");
+                setCurrentView({view:"diary"});
             } else {
                 setError(resp.data.msg)
             }    

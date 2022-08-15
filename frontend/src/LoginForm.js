@@ -28,7 +28,7 @@ const LoginForm = ({setLoggedIn, setCurrentView})=>{
             if (resp.data.msg === "Login successful"){
                 localStorage.setItem('accessToken',resp.data.access_token);
                 setLoggedIn(true);
-                setCurrentView("diary");
+                setCurrentView({view:"diary"});
             }
         }
         catch(error){

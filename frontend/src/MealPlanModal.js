@@ -28,7 +28,7 @@ const MealPlanModal = ({show, setShow, mealId})=>{
     },[])
 
     return (
-        <Modal show={show} onHide={()=>setShow(false)} centered>
+        <Modal className="Modal" show={show} onHide={()=>setShow(false)} centered>
             <Modal.Header className="p-0 Modal-header">
                 <div className="Modal-headerwrapper">
                 <Modal.Title className="Modal-title">{title}</Modal.Title>
@@ -36,39 +36,88 @@ const MealPlanModal = ({show, setShow, mealId})=>{
                 </div>
                 <button type="button" className="btn-close Modal-close" aria-label="Close" onClick={()=>setShow(false)}></button>
             </Modal.Header>
-            <Modal.Body>
-                <h5>Breakfast</h5>
-                <ul>
+            <Modal.Body className="Modal-body">
+                <div className="Modal-tablewrap">
+                <table className="table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col" className="px-1">Calories</th>
+                            <th scope="col" className="px-1">Protein</th>
+                            <th scope="col" className="px-1">Carbs</th>
+                            <th scope="col" className="px-1">Total Fats</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span className="badge rounded-pill bg-success">2000</span></td>
+                            <td><span className="badge rounded-pill bg-success">200</span></td>
+                            <td><span className="badge rounded-pill bg-success">200</span></td>
+                            <td><span className="badge rounded-pill bg-success">200</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+                <h5 className="mt-3">Breakfast</h5>
+                <ul className="list-group">
                     {entries.map((entry)=>{
                         if(entry.meal === 'b'){
-                            return <li className="Modal-item"><img className="Modal-listimg" src={entry.image}></img> {entry.food_name}</li>
+                            return <li className="Modal-item list-group-item">
+                                        <span>
+                                            <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
+                                        </span>
+                                        <span>
+                                            Qty:
+                                        </span>
+                                    </li>
                         }
                     })}
                 </ul>
 
                 <h5>Lunch</h5>
-                <ul>
+                <ul className="list-group">
                     {entries.map((entry)=>{
                         if(entry.meal === 'l'){
-                            return <li className="Modal-item"><img className="Modal-listimg" src={entry.image}></img> {entry.food_name}</li>
+                            return <li className="Modal-item list-group-item">
+                                        <span>
+                                            <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
+                                        </span>
+                                        <span>
+                                            Qty:
+                                        </span>
+                                    </li>
                         }
                     })}
                 </ul>
                 
                 <h5>Dinner</h5>
-                <ul>
+                <ul className="list-group">
                     {entries.map((entry)=>{
                         if(entry.meal === 'd'){
-                            return <li className="Modal-item"><img className="Modal-listimg" src={entry.image}></img> {entry.food_name}</li>
+                            return  <li className="Modal-item list-group-item">
+                                        <span>
+                                            <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
+                                        </span>
+                                        <span>
+                                            Qty:
+                                        </span>
+                                    </li>
                         }
                     })}
                 </ul>
                 
                 <h5>Snacks</h5>
-                <ul>
+                <ul className="list-group">
                     {entries.map((entry)=>{
                         if(entry.meal === 's'){
-                            return <li className="Modal-item"><img className="Modal-listimg" src={entry.image}></img> {entry.food_name}</li>
+                            return <li className="Modal-item list-group-item">
+                                        <span>
+                                            <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
+                                        </span>
+                                        <span>
+                                            Qty:
+                                        </span>
+                                    </li>
                         }
                     })}
                 </ul>

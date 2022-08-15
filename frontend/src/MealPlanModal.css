@@ -35,3 +35,40 @@
 .Modal-item{
     text-transform: capitalize;
 }
+
+.Modal li{
+    list-style-type: none   ;
+    display: flex;
+    justify-content: space-between;
+}
+
+.Modal{
+    font-family: 'Alice';
+}
+
+.Modal h5{
+    font-weight: bold;
+}
+
+.Modal th{
+    text-align: center;
+}
+
+.Modal td{
+    text-align: center;
+}
+
+.Modal-tablewrap{
+    display: flex;
+    justify-content: center;
+}
+
+@font-face {
+    font-family: 'Alice';
+    src: url('Alice-Regular.ttf');
+  }
+
+.Modal-body{
+
+}
+  
