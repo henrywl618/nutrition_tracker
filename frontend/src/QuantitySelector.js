@@ -6,9 +6,9 @@ const QuantitySelector = ({changeQty, qty, index})=>{
 
     return (
         <>
-            <Button size="sm" className="QS-button px-1 py-0" onClick={()=>changeQty('dec',index)}><i class="fa-solid fa-minus"></i></Button>
+            <Button size="sm" className="QS-button px-1 py-0 bluebutton" onClick={()=>changeQty('dec',index)}><i class="fa-solid fa-minus"></i></Button>
             <span>{qty}</span>
-            <Button size="sm" className="QS-button px-1 py-0" onClick={()=>changeQty('inc',index)}><i class="fa-solid fa-plus"></i></Button>
+            <Button size="sm" className="QS-button px-1 py-0 bluebutton" onClick={()=>changeQty('inc',index)}><i class="fa-solid fa-plus"></i></Button>
         </>
     )
 };

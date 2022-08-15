@@ -6,3 +6,9 @@
     height: 35px;
     width: 35px;
 }
+
+.DiaryForm-inputwrapper{}
+
+form label{
+    font-weight: bold;
+}

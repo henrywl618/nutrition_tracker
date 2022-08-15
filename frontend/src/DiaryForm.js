@@ -3,6 +3,7 @@ import SearchForm from "./SearchForm";
 import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import EntryLines from "./EntryLines";
+import { Button } from "react-bootstrap";
 import "./DiaryForm.css";
 
 const DiaryForm = ({toggleForm, viewDiaryList})=>{
@@ -159,16 +160,34 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
     return (
         <div>
             <h2>Create a new diary</h2>
-            <p className="text-danger">{error}</p>
-            <label htmlFor="date">Date</label>
-            <input type="date" id="date" value={date} onChange={changeDate}/>
-            <label htmlFor="calorie">Set Calorie Goal</label>
-            <input type="number" id="calorie" value={calorie} onChange={changeCalorie}></input>
+            <p className="text-danger my-3">{error}</p>
+            <div className="container">
+                <form className="row mb-3 DiaryForm-inputwrapper justify-content-center">
+                    <div className="col-md-3">
+                        <div>
+                            <label htmlFor="date" className="form-label">Date</label>
+                        </div>
+                        <div>
+                            <input type="date" id="date" value={date} onChange={changeDate} className="form-control-sm mb-2"/>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div>
+                            <label htmlFor="calorie" className="form-label">Set Calorie Goal</label>
+                        </div>
+                        <div>
+                            <input type="number" id="calorie" value={calorie} onChange={changeCalorie} className="form-control-sm mb-2"></input>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
 
             <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
 
-            <button onClick={createDiary}>Submit Diary</button>
-            <button onClick={viewDiaryList}>Go Back</button>
+            <Button className="bluebutton mx-2 mb-5" onClick={createDiary}>Submit Diary</Button>
+            <Button className="bluebutton mx-2 mb-5"onClick={viewDiaryList}>Go Back</Button>
 
             {showSearch.show && <SearchForm addEntry={addEntry} 
                                                    setInput={setInput} 

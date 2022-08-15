@@ -13,7 +13,7 @@
 
 .DiaryList-cardheader{
     font-weight: bold;
-    background-color: #18F2B2;
+    background-color: #18F2B2 !important;
 }
 
 .DiaryList-cardfooter{

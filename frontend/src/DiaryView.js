@@ -3,6 +3,7 @@ import SearchForm from "./SearchForm";
 import axios from "axios";
 import "./DiaryView.css";
 import EntryLines from "./EntryLines";
+import { Button } from "react-bootstrap";
 
 const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
@@ -193,8 +194,8 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
 
                 <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
 
-                <button onClick={editDiary}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</button>
-                <button onClick={viewDiaryList}>Go Back</button>
+                <Button className="bluebutton mx-2 mb-5"onClick={editDiary}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</Button>
+                <Button className="bluebutton mx-2 mb-5" onClick={viewDiaryList}>Go Back</Button>
             </div>
         )
     }

@@ -15,7 +15,7 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
     return(
         <>
         <Container>
-        <h4>Breakfast <Button size="sm" onClick={()=>handleClick("b")}><i class="fa-solid fa-plus"></i></Button></h4> 
+        <h4>Breakfast <Button className="bluebutton" size="sm" onClick={()=>handleClick("b")}><i class="fa-solid fa-plus"></i></Button></h4> 
         <Table striped bordered hover size="sm" responsive="xl" >
             <thead>
                 <tr>
@@ -39,7 +39,7 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
                                     <td>{entry.protein*entry.quantity}</td>
                                     <td>{entry.fat*entry.quantity}</td>
                                     <td>
-                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        <Button variant="danger" size="sm" className="redbutton" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
                                         </td>
                                 </tr>
                 }})}
@@ -48,7 +48,7 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
             <br></br>
 
         </Table>
-            <h4>Lunch <Button size="sm" onClick={()=>handleClick("l")}><i class="fa-solid fa-plus"></i></Button></h4>
+            <h4>Lunch <Button size="sm" className="bluebutton" onClick={()=>handleClick("l")}><i class="fa-solid fa-plus"></i></Button></h4>
         <Table striped bordered hover size="sm" responsive >
             <thead>
                 <tr>
@@ -72,18 +72,18 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
                                     <td>{entry.protein*entry.quantity}</td>
                                     <td>{entry.fat*entry.quantity}</td>
                                     <td>
-                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        <Button variant="danger" size="sm" className="redbutton" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
                                         </td>
                                 </tr>
                 }})}
             </tbody>
         </Table>
-        <h4>Dinner <Button size="sm" onClick={()=>handleClick("d")}><i class="fa-solid fa-plus"></i></Button></h4>
+        <h4>Dinner <Button size="sm" className="bluebutton" onClick={()=>handleClick("d")}><i class="fa-solid fa-plus"></i></Button></h4>
         <Table striped bordered hover size="sm" responsive >
             <thead>
                 <tr>
                     <th className="w-10">Qty</th>
-                    <th  className="w-40">Food Name</th>
+                    <th className="w-40">Food Name</th>
                     <th className="w-10">Calories</th>
                     <th className="w-10">Carbohydrates</th>
                     <th className="w-10">Protein</th>
@@ -102,13 +102,13 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
                                     <td>{entry.protein*entry.quantity}</td>
                                     <td>{entry.fat*entry.quantity}</td>
                                     <td>
-                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        <Button variant="danger" size="sm" className="redbutton" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
                                         </td>
                                 </tr>
                 }})}
             </tbody>
         </Table>
-        <h4>Snacks <Button size="sm" onClick={()=>handleClick("s")}><i class="fa-solid fa-plus"></i></Button></h4>
+        <h4>Snacks <Button size="sm" className="bluebutton" onClick={()=>handleClick("s")}><i class="fa-solid fa-plus"></i></Button></h4>
         <Table striped bordered hover size="sm" responsive >
             <thead>
             <tr>
@@ -132,7 +132,7 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
                                     <td>{entry.protein*entry.quantity}</td>
                                     <td>{entry.fat*entry.quantity}</td>
                                     <td>
-                                        <Button variant="danger" size="sm" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
+                                        <Button variant="danger" size="sm" className="redbutton" onClick={()=>deleteEntry(idx)}><i className="fa-solid fa-trash-can"></i></Button>
                                         </td>
                                 </tr>
                 }})}

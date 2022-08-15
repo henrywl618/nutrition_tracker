@@ -17,14 +17,18 @@ const DietSelector = ({setTags,inputValue})=>{
 
     return (
         <>
-        <label htmlFor="tags">Dietary Restrictions?</label>
-        <Select isMulti
-                onChange={handleChange}
-                name="tags"
-                defaultValue={inputValue ? inputValue : []}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                options={options}/>
+        <div>
+            <label htmlFor="tags form-label">Dietary Restrictions?</label>
+        </div>
+        <div>
+            <Select isMulti
+                    onChange={handleChange}
+                    name="tags"
+                    defaultValue={inputValue ? inputValue : []}
+                    className="basic-multi-select form-control-sm"
+                    classNamePrefix="select"
+                    options={options}/>
+        </div>
         </>
     )
 }

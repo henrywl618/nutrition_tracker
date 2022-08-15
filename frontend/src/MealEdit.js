@@ -3,6 +3,7 @@ import SearchForm from "./SearchForm";
 import axios from "axios";
 import EntryLines from "./EntryLines";
 import DietSelector from "./DietSelector";
+import { Button } from "react-bootstrap";
 
 const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
@@ -186,29 +187,52 @@ const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
             <div>
                 <h2>Edit Mealplan</h2>
                 <p className="text-danger">{error}</p>
-                <label htmlFor="title">Title</label>
-                <input type="title" id="title" value={title} onChange={changeTitle}/>
-                <label htmlFor="image"> Header Image </label>
-                <input type="url" id="image" value={image} onChange={changeImage}></input>
-                <p>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
-                <DietSelector setTags={setTags}
-                              inputValue={tags.map((tag)=>({value:tag,label:tag}))}/>
+                <div className="container">
+                <form className="row justify-content-center">
+                    <div className="col-md-3"></div>
+                    <div className="col-md-3 mb-1">
+                        <div>
+                            <label htmlFor="title">Title</label>
+                        </div>
+                        <div>
+                            <input type="title" id="title" value={title} onChange={changeTitle} placeholder="Enter a title"/>
+                        </div>
+                    </div>
+                    <div className="col-md-3 mb-1">
+                        <div>
+                            <label htmlFor="image"> Header Image </label>
+                        </div>
+                        <div>
+                            <input type="url" id="image" value={image} onChange={changeImage} placeholder="Image URL"></input>
+                        </div>
+
+                    </div>
+                    <div className="col-md-3"></div>
+                    <div className="col-md-6">
+                        <DietSelector setTags={setTags} inputValue={tags.map((tag)=>({value:tag,label:tag}))}/>
+                    </div>
+
+                </form>
+                </div>
+                <p style={{fontWeight:"bold"}}>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
+
+                <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
+
+                <Button className="bluebutton mx-2 mb-5" onClick={editMeal}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</Button>
+                <Button className="bluebutton mx-2 mb-5" onClick={viewMealList}>Go Back</Button>
 
                 {showSearch.show && <SearchForm addEntry={addEntry} 
                                                    setInput={setInput} 
                                                    input={input} 
                                                    setResults={setResults} 
                                                    results={results} 
+                                                   title={title} 
+                                                   setTitle={setTitle} 
                                                    meal={showSearch.meal}
                                                    handleCloseModal={handleCloseModal}
                                                    showModal={showModal}
                                                    entryAdded={entryAdded}
                                                    setEntryAdded={setEntryAdded}/>}
-
-                <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
-
-                <button onClick={editMeal}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</button>
-                <button onClick={viewMealList}>Go Back</button>
             </div>
         )
     }

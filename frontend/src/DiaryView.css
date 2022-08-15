@@ -5,6 +5,7 @@
 .DiaryView-image{
     height: 35px;
     width: 35px;
+    border-radius: 3px;
 }
 
 .bluebutton{
@@ -13,4 +14,8 @@
 
 .redbutton{
     background-color: #F21859;
+}
+
+h4{
+    font-weight: bold;
 }

@@ -15,7 +15,7 @@ const MealList = ({response, viewForm, editMeal, deleteMeal})=>{
     return(
         <>
             <h4>Meal Plans</h4>
-            <button onClick={viewForm}>Create a new meal</button>
+            <Button className="bluebutton" onClick={viewForm}>Create a new mealplan</Button>
         <Container>
             <div className="card-deck row justify-content-center">
                 {response && response.map((meal)=>{
