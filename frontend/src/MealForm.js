@@ -3,16 +3,18 @@ import SearchForm from "./SearchForm";
 import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import EntryLines from "./EntryLines";
+import DietSelector from "./DietSelector";
 import { Button } from "react-bootstrap";
-import "./DiaryForm.css";
+// import "./MealForm.css";
 
-const DiaryForm = ({toggleForm, viewDiaryList})=>{
+const MealForm = ({toggleForm, viewMealList})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
     let [results, setResults] = useState(emptyResults);
-    let [date, setDate] = useState("");
-    let [calorie, setCalorie] = useState(2000);
+    let [title, setTitle] = useState("");
+    let [image, setImage] = useState("");
+    let [tags, setTags] = useState([]);
     let [error, setError] = useState("");
     let [showSearch, setShowSearch] = useState({show:false,
                                                 meal:""});
@@ -37,12 +39,12 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 const item=response.data                            
                 const newEntry = {food_name: item.food_name,
                                     calorie: Math.round(item.nf_calories),
+                                    image: item.photo.thumb,
+                                    brand_item_id: item.nix_item_id,
                                     fat: Math.round(item.nf_total_fat),
                                     carbs: Math.round(item.nf_total_carbohydrate),
                                     protein: Math.round(item.nf_protein),
                                     serving_size:item.serving_unit,
-                                    image: item.photo.thumb,
-                                    brand_item_id: item.nix_item_id,
                                     isBrand: "TRUE",
                                     quantity:1,
                                     meal:meal
@@ -126,32 +128,32 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
         }
     }
 
-    const changeDate = (e)=>{
+    const changeTitle = (e)=>{
         //Handles form changes for Date input
-        setDate(e.target.value)
+        setTitle(e.target.value)
     };
 
-    const changeCalorie = (e)=>{
+    const changeImage = (e)=>{
         //Handles form changes for Calorie input
-        setCalorie(e.target.value)
+        setImage(e.target.value)
     };
 
-    const createDiary = async ()=>{
-        //Submits a post request to the backend server with entry data to create a new Diary and corresponding entries in the database.
+    const createMeal = async ()=>{
+        //Submits a post request to the backend server with entry data to create a new Meal and corresponding entries in the database.
         setError("");
-        const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
+        const json = JSON.stringify({entries:[...entries],title:title,header_image:image,tags:tags});
         try{
             const response = await axios({method:'post',
-                                          url:"http://127.0.0.1:5000/diary",
+                                          url:"http://127.0.0.1:5000/meal",
                                           headers:{"Content-Type":"application/json",
                                                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
             //Hide the form on successful submission
             if(response.data.success === true){
-                viewDiaryList();
+                viewMealList();
             }
-            else if(response.data.msg === "Please enter a valid date"){
-                setError("Please enter a date")
+            else {
+                setError(response.data.msg)
             }
         }
         catch(error){
@@ -161,43 +163,50 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
 
     return (
         <div>
-            <h2>Create a new diary</h2>
-            <p className="text-danger my-3">{error}</p>
+            <h2>Create a new meal</h2>
+            <p className="text-danger">{error}</p>
             <div className="container">
-                <form className="row mb-3 DiaryForm-inputwrapper justify-content-center">
-                    <div className="col-md-3">
+                <form className="row justify-content-center">
+                    <div className="col-md-3"></div>
+                    <div className="col-md-3 mb-1">
                         <div>
-                            <label htmlFor="date" className="form-label">Date</label>
+                            <label htmlFor="title">Title</label>
                         </div>
                         <div>
-                            <input type="date" id="date" value={date} onChange={changeDate} className="form-control-sm mb-2"/>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div>
-                            <label htmlFor="calorie" className="form-label">Set Calorie Goal</label>
-                        </div>
-                        <div>
-                            <input type="number" id="calorie" value={calorie} onChange={changeCalorie} className="form-control-sm mb-2"></input>
+                            <input type="title" id="title" value={title} onChange={changeTitle} placeholder="Enter a title"/>
                         </div>
                     </div>
+                    <div className="col-md-3 mb-1">
+                        <div>
+                            <label htmlFor="image"> Header Image </label>
+                        </div>
+                        <div>
+                            <input type="url" id="image" value={image} onChange={changeImage} placeholder="Image URL"></input>
+                        </div>
+
+                    </div>
+                    <div className="col-md-3"></div>
+                    <div className="col-md-6">
+                        <DietSelector setTags={setTags}/>
+                    </div>
+
                 </form>
-
             </div>
-
-
+        
+            <p style={{"fontWeight":"bold"}}>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
+            
             <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
 
-            <Button className="bluebutton mx-2 mb-5" onClick={createDiary}>Submit Diary</Button>
-            <Button className="bluebutton mx-2 mb-5"onClick={viewDiaryList}>Go Back</Button>
+            <Button className="bluebutton mx-2 mb-5"  onClick={createMeal}>Submit Meal</Button>
+            <Button className="bluebutton mx-2 mb-5"  onClick={viewMealList}>Go Back</Button>
 
             {showSearch.show && <SearchForm addEntry={addEntry} 
                                                    setInput={setInput} 
                                                    input={input} 
                                                    setResults={setResults} 
                                                    results={results} 
-                                                   date={date} 
-                                                   setDate={setDate} 
+                                                   title={title} 
+                                                   setTitle={setTitle} 
                                                    meal={showSearch.meal}
                                                    handleCloseModal={handleCloseModal}
                                                    showModal={showModal}
@@ -207,4 +216,4 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
     )
 };
 
-export default DiaryForm;
+export default MealForm;

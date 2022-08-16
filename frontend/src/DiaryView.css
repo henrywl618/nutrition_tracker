@@ -5,4 +5,29 @@
 .DiaryView-image{
     height: 35px;
     width: 35px;
+    border-radius: 3px;
+}
+
+.bluebutton{
+    background-color: #4318F2;
+}
+
+.redbutton{
+    background-color: #F21859;
+}
+
+.greenbutton{
+    background-color: #18F2B2;
+    color: black;
+    border: 1px solid #18F2B2;
+}
+
+.greenbutton:hover{
+    color:black;
+    background-color: #12ce96;
+    border: 1px solid #12ce96;
+}
+
+h4{
+    font-weight: bold;
 }

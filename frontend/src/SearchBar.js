@@ -1,9 +1,12 @@
 import axios, { Axios } from "axios";
 import React, {useState} from "react";
 
-const SearchBar = ({setResults, setInput, input})=>{
+const SearchBar = ({setResults, setInput, input, entryAdded, setEntryAdded})=>{
 
     const handleChange = (e)=>{
+        if(entryAdded){
+            setEntryAdded(false)
+        }
         setInput(e.target.value);
     };
 

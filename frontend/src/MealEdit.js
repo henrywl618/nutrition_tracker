@@ -1,25 +1,27 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect,useState } from "react";
 import SearchForm from "./SearchForm";
-import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import EntryLines from "./EntryLines";
+import DietSelector from "./DietSelector";
 import { Button } from "react-bootstrap";
-import "./DiaryForm.css";
 
-const DiaryForm = ({toggleForm, viewDiaryList})=>{
+const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
     let [input, setInput] = useState("");
     const emptyResults = {common:[],branded:[]};
     let [results, setResults] = useState(emptyResults);
-    let [date, setDate] = useState("");
-    let [calorie, setCalorie] = useState(2000);
+    let [title, setTitle] = useState("");
+    let [image, setImage] = useState("");
+    let [tags, setTags] = useState([]);
     let [error, setError] = useState("");
+    let [saving, setSaving] = useState(false);
     let [showSearch, setShowSearch] = useState({show:false,
                                                 meal:""});
     const [showModal, setShowModal] = useState(false);
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
     const [entryAdded, setEntryAdded] = useState(false);
+
 
     //Click handler for the search results. 
     //fooditem parameter is an object containing food data from NutritionIX API for the corresponding search result we clicked on.
@@ -37,12 +39,12 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 const item=response.data                            
                 const newEntry = {food_name: item.food_name,
                                     calorie: Math.round(item.nf_calories),
+                                    image: item.photo.thumb,
+                                    brand_item_id: item.nix_item_id,
                                     fat: Math.round(item.nf_total_fat),
                                     carbs: Math.round(item.nf_total_carbohydrate),
                                     protein: Math.round(item.nf_protein),
                                     serving_size:item.serving_unit,
-                                    image: item.photo.thumb,
-                                    brand_item_id: item.nix_item_id,
                                     isBrand: "TRUE",
                                     quantity:1,
                                     meal:meal
@@ -54,7 +56,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 //Reset search input after clicking on a result.
                 setInput("");
                 setResults(emptyResults);
-                setEntryAdded(true);
+                setEntryAdded(true)
 
             }
             catch(error){
@@ -77,7 +79,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
                                 quantity:1,
-                                meal:meal,
+                                meal:meal
                                 }
                 setEntries((currentEntries)=>{
                 const copy = [...currentEntries, newEntry];
@@ -86,7 +88,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
                 //Reset search input after clicking on a result.    
                 setInput(""); 
                 setResults(emptyResults);
-                setEntryAdded(true); 
+                setEntryAdded(true) 
             }
             catch(error){
                 console.log(error)
@@ -126,85 +128,116 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
         }
     }
 
-    const changeDate = (e)=>{
-        //Handles form changes for Date input
-        setDate(e.target.value)
-    };
 
-    const changeCalorie = (e)=>{
-        //Handles form changes for Calorie input
-        setCalorie(e.target.value)
-    };
-
-    const createDiary = async ()=>{
-        //Submits a post request to the backend server with entry data to create a new Diary and corresponding entries in the database.
-        setError("");
-        const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
+    const editMeal = async ()=>{
+        //Submits a post request to the backend server with entry data to create a new Meal and corresponding entries in the database.
+        const json = JSON.stringify({entries:[...entries],meal_id:mealId, title:title, image:image, tags:tags});
+        setSaving(true)
         try{
-            const response = await axios({method:'post',
-                                          url:"http://127.0.0.1:5000/diary",
-                                          headers:{"Content-Type":"application/json",
+            const response = await axios({method:'put',
+                                          url:`http://127.0.0.1:5000/meal/${mealId}`,
+                                          headers:{"Content-Type":"application/json",                                             
                                                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
-            //Hide the form on successful submission
-            if(response.data.success === true){
-                viewDiaryList();
-            }
-            else if(response.data.msg === "Please enter a valid date"){
-                setError("Please enter a date")
-            }
+            const entries = response.data.entries;
+            setSaving(false);
+            setEntries([...entries]);
+            viewMealList(); 
+
         }
         catch(error){
+            setSaving(false);
             console.log(error)
         }
     }
 
-    return (
-        <div>
-            <h2>Create a new diary</h2>
-            <p className="text-danger my-3">{error}</p>
-            <div className="container">
-                <form className="row mb-3 DiaryForm-inputwrapper justify-content-center">
-                    <div className="col-md-3">
+    const changeTitle = (e)=>{
+        //Handles form changes for Date input
+        setTitle(e.target.value)
+    };
+
+    const changeImage = (e)=>{
+        //Handles form changes for Calorie input
+        setImage(e.target.value)
+    };
+
+    useEffect(()=>{
+        const getMeal = async()=>{
+            try{
+                const resp = await axios.get(`http://127.0.0.1:5000/meal/${mealId}`, 
+                                            {headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}})
+                const meal = resp.data
+                setTitle(meal.title)
+                setImage(meal.header_image)
+                setEntries(meal.entries)
+                setTags(meal.tags)
+                setTimeout(()=>setIsLoading(false),100);
+            }
+            catch(error){
+                console.log(error)
+            }
+        };
+        getMeal();
+    },[mealId,isLoading]);
+
+    if (isLoading){
+        return (
+            <i className="fa-solid fa-spinner"></i>
+        )
+    }else{
+        return (
+            <div>
+                <h2>Edit Mealplan</h2>
+                <p className="text-danger">{error}</p>
+                <div className="container">
+                <form className="row justify-content-center">
+                    <div className="col-md-3"></div>
+                    <div className="col-md-3 mb-1">
                         <div>
-                            <label htmlFor="date" className="form-label">Date</label>
+                            <label htmlFor="title">Title</label>
                         </div>
                         <div>
-                            <input type="date" id="date" value={date} onChange={changeDate} className="form-control-sm mb-2"/>
+                            <input type="title" id="title" value={title} onChange={changeTitle} placeholder="Enter a title"/>
                         </div>
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-3 mb-1">
                         <div>
-                            <label htmlFor="calorie" className="form-label">Set Calorie Goal</label>
+                            <label htmlFor="image"> Header Image </label>
                         </div>
                         <div>
-                            <input type="number" id="calorie" value={calorie} onChange={changeCalorie} className="form-control-sm mb-2"></input>
+                            <input type="url" id="image" value={image} onChange={changeImage} placeholder="Image URL"></input>
                         </div>
+
                     </div>
+                    <div className="col-md-3"></div>
+                    <div className="col-md-6">
+                        <DietSelector setTags={setTags} inputValue={tags.map((tag)=>({value:tag,label:tag}))}/>
+                    </div>
+
                 </form>
+                </div>
+                <p style={{fontWeight:"bold"}}>Total Calories: {entries.reduce((previousTotal,currentEntry)=>previousTotal+(currentEntry.calorie*currentEntry.quantity),0)}</p>
 
-            </div>
+                <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
 
+                <Button className="bluebutton mx-2 mb-5" onClick={editMeal}>{saving ? <i className="fa-solid fa-spinner"></i> : "Save Changes"}</Button>
+                <Button className="bluebutton mx-2 mb-5" onClick={viewMealList}>Go Back</Button>
 
-            <EntryLines entries={entries} deleteEntry={deleteEntry} changeQty={changeQty} setShowSearch={setShowSearch} handleShowModal={handleShowModal}/>
-
-            <Button className="bluebutton mx-2 mb-5" onClick={createDiary}>Submit Diary</Button>
-            <Button className="bluebutton mx-2 mb-5"onClick={viewDiaryList}>Go Back</Button>
-
-            {showSearch.show && <SearchForm addEntry={addEntry} 
+                {showSearch.show && <SearchForm addEntry={addEntry} 
                                                    setInput={setInput} 
                                                    input={input} 
                                                    setResults={setResults} 
                                                    results={results} 
-                                                   date={date} 
-                                                   setDate={setDate} 
+                                                   title={title} 
+                                                   setTitle={setTitle} 
                                                    meal={showSearch.meal}
                                                    handleCloseModal={handleCloseModal}
                                                    showModal={showModal}
                                                    entryAdded={entryAdded}
                                                    setEntryAdded={setEntryAdded}/>}
-        </div>
-    )
+            </div>
+        )
+    }
 };
 
-export default DiaryForm;
+export default MealEdit;

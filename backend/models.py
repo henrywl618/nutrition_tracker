@@ -18,7 +18,6 @@ class User(db.Model):
     email = db.Column(
         db.Text,
         nullable=False,
-        unique=True,
     )
 
     username = db.Column(
@@ -43,7 +42,6 @@ class User(db.Model):
     def serialize(self):
         return {'id':self.id,
                 'username':self.username,
-                'password':self.password,
                 'email':self.email,}
 
     @classmethod
@@ -62,7 +60,24 @@ class User(db.Model):
             if is_auth:
                 return user
 
-        return False               
+        return False
+    
+    @classmethod
+    def signup(cls, username, password, email):
+        """Sign up user.
+        Hashes password and adds user to the system.
+        """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = User(
+            username=username,
+            password=hashed_pwd,
+            email=email,
+        )
+
+        db.session.add(user)
+        return user
 
 class Fooditem(db.Model):
     """An individual food item"""
@@ -83,6 +98,21 @@ class Fooditem(db.Model):
         nullable=False
     )
 
+    protein = db.Column(
+        db.Integer,
+        default=0
+    )
+
+    fat = db.Column(
+        db.Integer,
+        default=0
+    )
+
+    carbs = db.Column(
+        db.Integer,
+        default=0
+    )
+
     image = db.Column(
         db.Text
     )
@@ -96,13 +126,22 @@ class Fooditem(db.Model):
         nullable=False,
         default='FALSE'
     )
+    
+    serving_size = db.Column(
+        db.Text,
+        nullable=False,
+    )
 
     def serialize(self):
         return {
             'id':self.id,
             'food_name':self.food_name,
             'calorie':self.calorie,
-            'image':self.image
+            'protein':self.protein,
+            'fat':self.fat,
+            'carbs':self.carbs,
+            'image':self.image,
+            'serving_size':self.serving_size,
         }
 
 class Diary(db.Model):
@@ -136,9 +175,25 @@ class Diary(db.Model):
     def serialize(self):
         return{
             'id':self.id,
-            'date':self.date,
+            'date':self.date.strftime("%b %d %Y"),
             'calorie_goal':self.calorie_goal,
+            'nutrition_totals':self.calc_nutrition_total()
         }
+    
+    def calc_nutrition_total(self):
+        totals = {'calories':0,
+                  'protein':0,
+                  'carbs':0,
+                  'fat':0}
+
+        for entry in self.entryline:
+            totals['calories'] = totals['calories'] + (entry.quantity * entry.fooditem.calorie)
+            totals['protein'] = totals['protein'] + (entry.quantity * entry.fooditem.protein)
+            totals['carbs'] = totals['carbs'] + (entry.quantity * entry.fooditem.carbs)
+            totals['fat'] = totals['fat'] + (entry.quantity * entry.fooditem.fat)
+        
+        return totals
+
 
 class DiaryEntryLine(db.Model):
     """Mapping Diary to EntryLine and an EntryLine to Fooditem"""
@@ -161,6 +216,11 @@ class DiaryEntryLine(db.Model):
         default=1
     )
 
+    meal = db.Column(
+        db.Text,
+        default="b"
+    )
+
     fooditem = db.relationship('Fooditem')
     diary = db.relationship('Diary', back_populates="entryline")
 
@@ -169,8 +229,13 @@ class DiaryEntryLine(db.Model):
             'id':self.fooditem.id,
             'food_name':self.fooditem.food_name,
             'calorie':self.fooditem.calorie,
+            'protein':self.fooditem.protein,
+            'fat':self.fooditem.fat,
+            'carbs':self.fooditem.carbs,
             'image':self.fooditem.image,
-            'quantity':self.quantity
+            'quantity':self.quantity,
+            'serving_size':self.fooditem.serving_size,
+            'meal':self.meal,
         }
 
 class Mealplan(db.Model):
@@ -194,15 +259,39 @@ class Mealplan(db.Model):
     )
 
     header_image = db.Column(
-        db.Text
+        db.Text,
+        default="https://www.dirtyapronrecipes.com/wp-content/uploads/2015/10/food-placeholder.png"
     )
 
 
     user = db.relationship('User', back_populates='mealplans')
-    entryline = db.relationship('MealplanEntryLine', back_populates="mealplan")
+    entryline = db.relationship('MealplanEntryLine', back_populates="mealplan", cascade="all, delete")
     tags = db.relationship('Tag',
                             secondary='mealplan_tag',
                             back_populates='mealplans')
+    
+    def serialize(self):
+        return{
+            'id':self.id,
+            'title':self.title,
+            'header_image':self.header_image,
+            'tags': [tag.name for tag in self.tags],
+            'nutrition_totals':self.calc_nutrition_total(),
+        }
+    
+    def calc_nutrition_total(self):
+        totals = {'calories':0,
+                    'protein':0,
+                    'carbs':0,
+                    'fat':0}
+
+        for entry in self.entryline:
+            totals['calories'] = totals['calories'] + (entry.quantity * entry.fooditem.calorie)
+            totals['protein'] = totals['protein'] + (entry.quantity * entry.fooditem.protein)
+            totals['carbs'] = totals['carbs'] + (entry.quantity * entry.fooditem.carbs)
+            totals['fat'] = totals['fat'] + (entry.quantity * entry.fooditem.fat)
+        
+        return totals
 
 
 class MealplanEntryLine(db.Model):
@@ -226,8 +315,28 @@ class MealplanEntryLine(db.Model):
         default=1
     )
 
+    meal = db.Column(
+        db.Text,
+        default="b"
+    )
+
     fooditem = db.relationship('Fooditem')
     mealplan = db.relationship('Mealplan', back_populates="entryline")
+
+    def serialize(self):
+        return {
+            'id':self.fooditem.id,
+            'food_name':self.fooditem.food_name,
+            'calorie':self.fooditem.calorie,
+            'protein':self.fooditem.protein,
+            'fat':self.fooditem.fat,
+            'carbs':self.fooditem.carbs,
+            'image':self.fooditem.image,
+            'quantity':self.quantity,
+            'serving_size':self.fooditem.serving_size,
+            'meal':self.meal,
+        }
+
 
 class Tag(db.Model):
     """Tags for dietary options"""
@@ -245,7 +354,7 @@ class Tag(db.Model):
                                 back_populates="tags")
 
 class MealplanTag(db.Model):
-    """ Conection for Mealplan <---> Tag """
+    """ Connection for Mealplan <---> Tag """
 
     __tablename__="mealplan_tag"
 

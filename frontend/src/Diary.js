@@ -6,7 +6,7 @@ import "./Diary.css";
 import DiaryView from "./DiaryView";
 import DiaryList from "./DiaryList";
 
-const Diary = ({userId})=>{
+const Diary = ()=>{
 
     let [showDiaryList, setShowDiaryList] = useState(true);
     let [response, setResponse] = useState(null);
@@ -45,7 +45,8 @@ const Diary = ({userId})=>{
     const deleteDiary = async (diaryId)=>{
         try{
             const resp = await axios({method:'delete',
-                                      url:`http://127.0.0.1:5000/diary/${diaryId}`})
+                                      url:`http://127.0.0.1:5000/diary/${diaryId}`,
+                                      headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`},})
             setResponse(resp.data);
         }   
         catch(error){
@@ -57,20 +58,20 @@ const Diary = ({userId})=>{
         const fetchData = async ()=>{
             const resp = await axios({method:'get',
                                             url:'http://127.0.0.1:5000/diary',
-                                            params:{userId:userId}
+                                            headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
                                         })
             setResponse(resp.data);
         };
         fetchData();
 
-    },[showForm]);
+    },[showForm,showDiaryList]);
 
     return(
-        <>  
+        <div className="Diary">  
             {showDiaryList && <DiaryList response={response} viewForm={viewForm} viewDiary={viewDiary} deleteDiary={deleteDiary}/>}
             {showForm && <DiaryForm toggleForm={toggleForm} viewDiaryList={viewDiaryList}/>}
             {showDiary && <DiaryView viewDiaryList={viewDiaryList} diaryId={viewingDiaryId} isLoading={isLoading} setIsLoading={setIsLoading}/>}
-        </>
+        </div>
     );
 }
 

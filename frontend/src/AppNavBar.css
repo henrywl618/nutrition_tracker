@@ -1,0 +1,14 @@
+.AppNavBar{
+    background-color: #18F2B2;
+    padding-bottom: 0px;
+}
+
+.Navbar-brand{
+    font-size: 1.25rem;
+    font-weight: bolder;
+    
+}
+
+.nav-link.disabled{
+    background-color: white !important;
+}

@@ -1,16 +1,31 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Diary from './Diary';
 import AppNavbar from './AppNavbar';
+import LoginForm from './LoginForm';
+import SignupForm from './SignupForm';
 import './App.css';
+import Meal from './Meal';
+import UserPage from './UserPage';
 
 
 function App() {
-  let [curentView,setCurrentView] = useState("");
+  let [currentView,setCurrentView] = useState({view:"diary"});
+  let [loggedIn, setLoggedIn] = useState(false);
+  
+  useEffect(()=>{
+    if(localStorage.getItem('accessToken')){
+      setLoggedIn(true)
+    }
+  });
 
   return (
     <div className="App">
-      <AppNavbar />
-      <Diary userId={4}/>
+      <AppNavbar setLoggedIn={setLoggedIn} loggedIn={loggedIn} view={currentView.view} setCurrentView={setCurrentView}/>
+      {loggedIn && currentView.view === 'diary' && <Diary />}
+      {loggedIn && currentView.view === 'mealplan' && <Meal />}
+      {loggedIn && currentView.view === 'user' && <UserPage />}
+      {!loggedIn && currentView.view === 'signup' &&   <SignupForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
+      {!loggedIn && currentView.view === 'login' &&   <LoginForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
     </div>
   );
 }

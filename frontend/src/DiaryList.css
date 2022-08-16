@@ -1,0 +1,29 @@
+.DiaryList-nutrition{
+    display: flex;
+    justify-content: space-between;
+}
+
+.DiaryList-nutritionlabel{
+    font-weight: bold;
+}
+
+.DiaryList-nutritiontotal{
+
+}
+
+.DiaryList-cardheader{
+    font-weight: bold;
+    background-color: #18F2B2 !important;
+}
+
+.DiaryList-cardfooter{
+    /* background-color: #18F2B2; */
+}
+
+.bluebutton{
+    background-color: #4318F2;
+}
+
+.redbutton{
+    background-color: #F21859;
+}
