@@ -78,11 +78,11 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
                     {entries.map((entry)=>{
                         if(entry.meal === 'b'){
                             return <li className="Modal-item list-group-item">
-                                        <span>
+                                        <span className="bold">
                                             <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
                                         </span>
                                         <span>
-                                            Qty:
+                                            <span className="bold px-0">{`Qty:`}</span><span>{`${entry.quantity} ${entry.serving_size}`}</span>
                                         </span>
                                     </li>
                         }
@@ -94,11 +94,11 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
                     {entries.map((entry)=>{
                         if(entry.meal === 'l'){
                             return <li className="Modal-item list-group-item">
-                                        <span>
+                                        <span className="bold">
                                             <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
                                         </span>
                                         <span>
-                                            Qty:
+                                            <span className="bold px-0">{`Qty:`}</span><span>{`${entry.quantity} ${entry.serving_size}`}</span>
                                         </span>
                                     </li>
                         }
@@ -110,11 +110,11 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
                     {entries.map((entry)=>{
                         if(entry.meal === 'd'){
                             return  <li className="Modal-item list-group-item">
-                                        <span>
+                                        <span className="bold">
                                             <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
                                         </span>
                                         <span>
-                                            Qty:
+                                            <span className="bold px-0">{`Qty:`}</span><span>{`${entry.quantity} ${entry.serving_size}`}</span>
                                         </span>
                                     </li>
                         }
@@ -126,11 +126,11 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
                     {entries.map((entry)=>{
                         if(entry.meal === 's'){
                             return <li className="Modal-item list-group-item">
-                                        <span>
+                                        <span className="bold">
                                             <img className="Modal-listimg img-fluid rounded" src={entry.image}></img> {entry.food_name}
                                         </span>
                                         <span>
-                                            Qty:
+                                            <span className="bold px-0">{`Qty:`}</span><span>{`${entry.quantity} ${entry.serving_size}`}</span>
                                         </span>
                                     </li>
                         }
