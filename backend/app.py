@@ -147,6 +147,7 @@ def create_diary():
                                         protein=entry['protein'],
                                         fat=entry['fat'],
                                         carbs=entry['carbs'],
+                                        serving_size=entry['serving_size'],
                                         isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                         brand_item_id = entry.get('brand_item_id'),
                                         image=entry['image'])
@@ -206,6 +207,7 @@ def edit_diary(diary_id):
                                         protein=entry['protein'],
                                         fat=entry['fat'],
                                         carbs=entry['carbs'],
+                                        serving_size=entry['serving_size'],
                                         isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                         brand_item_id = entry.get('brand_item_id'),
                                         image=entry['image'])
@@ -285,6 +287,7 @@ def create_meal():
                                     protein=entry['protein'],
                                     fat=entry['fat'],
                                     carbs=entry['carbs'],
+                                    serving_size=entry['serving_size'],
                                     isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                     brand_item_id = entry.get('brand_item_id'),
                                     image=entry['image'])
@@ -356,6 +359,7 @@ def edit_meal(meal_id):
                                         protein=entry['protein'],
                                         fat=entry['fat'],
                                         carbs=entry['carbs'],
+                                        serving_size=entry['serving_size'],
                                         isBrand= 'TRUE' if entry['isBrand'] == 'TRUE' else 'FALSE',
                                         brand_item_id = entry.get('brand_item_id'),
                                         image=entry['image'])

@@ -1,7 +1,7 @@
-food_name,calorie,image,brand_item_id,isBrand
-cereal,105,https://nix-tag-images.s3.amazonaws.com/113_thumb.jpg,,FALSE
-milk,122,https://nix-tag-images.s3.amazonaws.com/377_thumb.jpg,,FALSE
-yogurt,107,https://nix-tag-images.s3.amazonaws.com/186_thumb.jpg,,FALSE
-banana,105,https://nix-tag-images.s3.amazonaws.com/399_thumb.jpg,,FALSE
-peanut butter jelly sandwich,378,https://nix-tag-images.s3.amazonaws.com/2052_thumb.jpg,,FALSE
-jalapeno chips,149,https://nix-tag-images.s3.amazonaws.com/120_thumb.jpg,,FALSE
+food_name,calorie,image,brand_item_id,isBrand,protein,carbs,fat,serving_size
+cereal,105,https://nix-tag-images.s3.amazonaws.com/113_thumb.jpg,,FALSE,3,21,2,cup
+milk,122,https://nix-tag-images.s3.amazonaws.com/377_thumb.jpg,,FALSE,8,12,5,cup
+yogurt,107,https://nix-tag-images.s3.amazonaws.com/186_thumb.jpg,,FALSE,9,12,3,container (6 oz)
+banana,105,https://nix-tag-images.s3.amazonaws.com/399_thumb.jpg,,FALSE,1,27,0,medium (7\" to 7-7/8\" long)
+peanut butter jelly sandwich,378,https://nix-tag-images.s3.amazonaws.com/2052_thumb.jpg,,FALSE,12,46,17,sandwich
+jalapeno chips,149,https://nix-tag-images.s3.amazonaws.com/120_thumb.jpg,,FALSE,2,15,10,oz

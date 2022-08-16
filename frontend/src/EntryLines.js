@@ -1,16 +1,23 @@
 import React from "react";
 import QuantitySelector from "./QuantitySelector";
-import { Table, Container, Button } from "react-bootstrap";
+import { Table, Container, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import "./EntryLine.css";
 
 
 const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowModal})=>{
+
 
     const handleClick = (meal)=>{
         handleShowModal();
         setShowSearch(()=>({show:true,
                             meal:meal}));
     }
+
+    // const renderTooltip = (props) => {
+    //     return <Tooltip id="button-tooltip" {...props}>
+    //         {`Serving Unit:${props.msg}`}
+    //     </Tooltip>
+    // };
 
     return(
         <>
@@ -32,7 +39,16 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
                 {entries.map((entry,idx)=>{
                     if(entry.meal === 'b' ){
                         return <tr className="DiaryView-entryline">
-                                    <td className=""><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <OverlayTrigger placement="right"
+                                                    msg={entry.serving_size}
+                                                    overlay={<Tooltip className="tooltip">
+                                                                {`Serving Unit: ${entry.serving_size}`} 
+                                                            </Tooltip>}>
+                                        <td className="">
+                                            <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
+                                        </td>
+                                    </OverlayTrigger>     
+
                                     <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
                                     <td>{entry.calorie*entry.quantity}</td>
                                     <td>{entry.carbs*entry.quantity}</td>
@@ -65,7 +81,15 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
             {entries.map((entry,idx)=>{
                     if(entry.meal === 'l' ){
                         return <tr className="DiaryView-entryline">
-                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <OverlayTrigger placement="right"
+                                                    msg={entry.serving_size}
+                                                    overlay={<Tooltip className="tooltip">
+                                                                {`Serving Unit: ${entry.serving_size}`} 
+                                                            </Tooltip>}>
+                                        <td className="">
+                                            <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
+                                        </td>
+                                    </OverlayTrigger>  
                                     <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
                                     <td>{entry.calorie*entry.quantity}</td>
                                     <td>{entry.carbs*entry.quantity}</td>
@@ -95,7 +119,15 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
             {entries.map((entry,idx)=>{
                     if(entry.meal === 'd' ){
                         return <tr className="DiaryView-entryline">
-                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <OverlayTrigger placement="right"
+                                                    msg={entry.serving_size}
+                                                    overlay={<Tooltip className="tooltip">
+                                                                {`Serving Unit: ${entry.serving_size}`} 
+                                                            </Tooltip>}>
+                                        <td className="">
+                                            <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
+                                        </td>
+                                    </OverlayTrigger>  
                                     <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
                                     <td>{entry.calorie*entry.quantity}</td>
                                     <td>{entry.carbs*entry.quantity}</td>
@@ -125,7 +157,15 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
             {entries.map((entry,idx)=>{
                     if(entry.meal === 's' ){
                         return <tr className="DiaryView-entryline">
-                                    <td><QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/></td>
+                                    <OverlayTrigger placement="right"
+                                                    msg={entry.serving_size}
+                                                    overlay={<Tooltip className="tooltip">
+                                                                {`Serving Unit: ${entry.serving_size}`} 
+                                                            </Tooltip>}>
+                                        <td className="">
+                                            <QuantitySelector changeQty={changeQty} index={idx} qty={entry.quantity}/>
+                                        </td>
+                                    </OverlayTrigger>  
                                     <td><img src={entry.image} className="DiaryView-image"></img> {entry.food_name}</td>
                                     <td>{entry.calorie*entry.quantity}</td>
                                     <td>{entry.carbs*entry.quantity}</td>

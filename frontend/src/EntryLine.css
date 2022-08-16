@@ -13,3 +13,19 @@
     width:40%;
     background-color: #18F2B2 !important;
 }
+
+.tooltip > .tooltip-inner{
+    background-color: #18F2B2;
+    color: black;
+    font-family: 'Alice';
+}
+
+.tooltip > .tooltip-arrow{
+    --bs-tooltip-bg: #18F2B2;
+}
+
+@font-face {
+    font-family: 'Alice';
+    src: url('Alice-Regular.ttf');
+  }
+  

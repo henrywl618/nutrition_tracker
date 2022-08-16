@@ -126,6 +126,11 @@ class Fooditem(db.Model):
         nullable=False,
         default='FALSE'
     )
+    
+    serving_size = db.Column(
+        db.Text,
+        nullable=False,
+    )
 
     def serialize(self):
         return {
@@ -135,7 +140,8 @@ class Fooditem(db.Model):
             'protein':self.protein,
             'fat':self.fat,
             'carbs':self.carbs,
-            'image':self.image
+            'image':self.image,
+            'serving_size':self.serving_size,
         }
 
 class Diary(db.Model):
@@ -228,6 +234,7 @@ class DiaryEntryLine(db.Model):
             'carbs':self.fooditem.carbs,
             'image':self.fooditem.image,
             'quantity':self.quantity,
+            'serving_size':self.fooditem.serving_size,
             'meal':self.meal,
         }
 
@@ -326,6 +333,7 @@ class MealplanEntryLine(db.Model):
             'carbs':self.fooditem.carbs,
             'image':self.fooditem.image,
             'quantity':self.quantity,
+            'serving_size':self.fooditem.serving_size,
             'meal':self.meal,
         }
 

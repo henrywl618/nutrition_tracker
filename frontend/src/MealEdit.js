@@ -44,6 +44,7 @@ const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
                                     fat: Math.round(item.nf_total_fat),
                                     carbs: Math.round(item.nf_total_carbohydrate),
                                     protein: Math.round(item.nf_protein),
+                                    serving_size:item.serving_unit,
                                     isBrand: "TRUE",
                                     quantity:1,
                                     meal:meal
@@ -74,6 +75,7 @@ const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
                                 fat: Math.round(item.nf_total_fat),
                                 carbs: Math.round(item.nf_total_carbohydrate),
                                 protein: Math.round(item.nf_protein),
+                                serving_size:item.serving_unit,
                                 image: item.photo.thumb,
                                 isBrand: "FALSE",
                                 quantity:1,
