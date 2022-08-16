@@ -2,10 +2,11 @@ import React from "react";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import "./AppNavBar.css"
 
 
-const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
+const AppNavbar = ({setLoggedIn, loggedIn, view, setCurrentView})=>{
 
   const logout = ()=>{
     localStorage.removeItem("accessToken");
@@ -18,11 +19,21 @@ const AppNavbar = ({setLoggedIn, loggedIn, setCurrentView})=>{
       <Navbar.Brand href="#home" className="Navbar-brand"><i className="fa-solid fa-wheat-awn mx-2"></i>Nutrition Tracker</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="">
-          <Nav className="me-auto ">
+          <Nav variant="tabs" className="me-auto ">
             {loggedIn &&
             <>
-            <Nav.Link onClick={()=>setCurrentView({view:'diary'})}><i className="fa-solid fa-book mx-1"></i>Daily Food Diaries</Nav.Link>
-            <Nav.Link onClick={()=>setCurrentView({view:'mealplan'})}> <i className="fa-solid fa-utensils mx-1"></i>Mealplans</Nav.Link>
+            <Nav.Link disabled={view === "diary"}
+                      className="nav-link"
+                      onClick={()=>setCurrentView({view:'diary'})}>
+                      <i className="fa-solid fa-book mx-1"></i>
+                      Daily Food Diaries
+            </Nav.Link>
+            <Nav.Link disabled={view === "mealplan"}
+                      className="nav-link"
+                      onClick={()=>setCurrentView({view:'mealplan'})}> 
+                      <i className="fa-solid fa-utensils mx-1"></i>
+                      Mealplans
+            </Nav.Link>
             </>
             }
           </Nav>

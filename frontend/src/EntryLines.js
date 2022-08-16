@@ -40,7 +40,6 @@ const EntryLines = ({entries, deleteEntry, changeQty, setShowSearch, handleShowM
                     if(entry.meal === 'b' ){
                         return <tr className="DiaryView-entryline">
                                     <OverlayTrigger placement="right"
-                                                    msg={entry.serving_size}
                                                     overlay={<Tooltip className="tooltip">
                                                                 {`Serving Unit: ${entry.serving_size}`} 
                                                             </Tooltip>}>

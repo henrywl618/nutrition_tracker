@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div className="App">
-      <AppNavbar setLoggedIn={setLoggedIn} loggedIn={loggedIn} setCurrentView={setCurrentView}/>
+      <AppNavbar setLoggedIn={setLoggedIn} loggedIn={loggedIn} view={currentView.view} setCurrentView={setCurrentView}/>
       {loggedIn && currentView.view === 'diary' && <Diary />}
       {loggedIn && currentView.view === 'mealplan' && <Meal />}
       {loggedIn && currentView.view === 'user' && <UserPage />}
