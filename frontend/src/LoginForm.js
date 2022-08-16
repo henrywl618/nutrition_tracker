@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
+import { Button } from "react-bootstrap";
 
 const LoginForm = ({setLoggedIn, setCurrentView})=>{
     
@@ -44,19 +45,20 @@ const LoginForm = ({setLoggedIn, setCurrentView})=>{
 
     return(
         <div>
-            <h2>Login</h2>
             <p className="text-danger">{error}</p>
-            <form>
-                <label htmlFor="username">
-                Username: 
-                </label>
-                <input id="username" name="username" onChange={handleChange} value={formData.username}></input>
-                <label htmlFor="password">
-                Password: 
-                </label>
-                <input type="password" id="password" name="password" onChange={handleChange} value={formData.password}></input>
-                <button onClick={login}>Login</button>
+            <div className="row justify-content-center m-3">
+            <form className="SignupForm-form col-lg-3 col-md-6">
+                <div>   
+                    <label className="form-label" htmlFor="username">Username:</label>
+                    <input className="form-control"type="text" name="username" id="username" onChange={handleChange} value={formData.username}></input>
+                </div>
+                <div>
+                    <label className="form-label" htmlFor="password">Password:</label>
+                    <input className="form-control"type="password" name="password" id="password" onChange={handleChange} value={formData.password}></input>
+                </div>
+                <Button className="greenbutton my-2" onClick={login}>Login</Button>
             </form>
+            </div>
         </div>
     )
 };

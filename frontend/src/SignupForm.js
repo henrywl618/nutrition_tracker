@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
+import { Button } from "react-bootstrap";
+import "./SignupForm.css"
 
 const SignupForm = ({setLoggedIn, setCurrentView})=>{
     const emptyFormData = {username:"",
@@ -46,15 +48,23 @@ const SignupForm = ({setLoggedIn, setCurrentView})=>{
         <div>
             <h3>Signup</h3>
             <p className="text-danger">{error}</p>
-            <form>
-                <label htmlFor="username">Username:</label>
-                <input type="text" name="username" id="username" onChange={changeForm} value={formData.username}></input>
-                <label htmlFor="password">Password:</label>
-                <input type="password" name="password" id="password" onChange={changeForm} value={formData.password}></input>
-                <label htmlFor="email">Email:</label>
-                <input type="email" name="email" id="email" onChange={changeForm} value={formData.email}></input>
-                <button onClick={handleSubmit}>Submit</button>
+            <div className="row justify-content-center m-3">
+            <form className="SignupForm-form col-lg-3 col-md-6">
+                <div>   
+                    <label className="form-label" htmlFor="username">Username:</label>
+                    <input className="form-control"type="text" name="username" id="username" onChange={changeForm} value={formData.username}></input>
+                </div>
+                <div>
+                    <label className="form-label" htmlFor="password">Password:</label>
+                    <input className="form-control"type="password" name="password" id="password" onChange={changeForm} value={formData.password}></input>
+                </div>
+                <div>
+                    <label className="form-label" htmlFor="email">Email:</label>
+                    <input className="form-control"type="email" name="email" id="email" onChange={changeForm} value={formData.email}></input>
+                </div>
+                <Button className="greenbutton my-2" onClick={handleSubmit}>Create Account</Button>
             </form>
+            </div>
         </div>
     );
 };
