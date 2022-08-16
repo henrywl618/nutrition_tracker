@@ -2,7 +2,6 @@ import React from "react";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import "./AppNavBar.css"
 
 

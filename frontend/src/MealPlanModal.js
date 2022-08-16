@@ -8,6 +8,7 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
     let [nutrition, setNutrition] = useState({});
     let [title, setTitle] = useState("");
     let [image, setImage] = useState("");
+    let [poster, setPoster] = useState("");
     let [canEdit, setCanEdit] = useState(false);
     let [tags, setTags] = useState([]);
 
@@ -33,6 +34,7 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
                 setEntries(meal.entries)
                 setNutrition(meal.nutrition_totals)
                 setCanEdit(meal.can_edit)
+                setPoster(meal.posted_by)
                 setTags(meal.tags)
             }
             catch(error){
@@ -138,14 +140,18 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
                 </ul>
                 
             </Modal.Body>
-            {
-            canEdit &&
-            <ModalFooter>
-                <Button className="m-1 bluebutton" size="sm" onClick={handleEdit}>Edit</Button>
-                <Button className="m-1 redbutton" size="sm" variant="danger" onClick={handleDelete}><i className="fa-solid fa-trash-can"></i></Button>
+            <ModalFooter className="justify-content-between">
+                <div className="col-6 text-start">
+                    Posted by: {poster}
+                </div>
+                {
+                canEdit &&
+                <div className="col-5 d-flex justify-content-end">
+                    <Button className="m-1 bluebutton" size="sm" onClick={handleEdit}>Edit</Button>
+                    <Button className="m-1 redbutton" size="sm" variant="danger" onClick={handleDelete}><i className="fa-solid fa-trash-can"></i></Button>
+                </div>
+                }
             </ModalFooter>
-            }
-
         </Modal>
     )
 }

@@ -314,7 +314,7 @@ def view_meal(meal_id):
     entries = meal.entryline
     edit_meal = current_user == meal.user
     serialized_entries = [entry.serialize() for entry in entries]
-    return jsonify({**meal.serialize(),'entries':serialized_entries, 'can_edit':edit_meal})
+    return jsonify({**meal.serialize(),'entries':serialized_entries, 'can_edit':edit_meal, 'posted_by':meal.user.username})
 
 @app.route("/meal/<int:meal_id>", methods=["PUT"])
 @jwt_required()
