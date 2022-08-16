@@ -10,7 +10,7 @@ const SearchForm = ({addEntry, setInput, input, results, setResults, meal, showM
         .slice(0,(results.common.length<=5 ? results.common.length : 5)) //Map only the first five items ot the whole array if its <= 5 items
         .map((result,idx)=>{
             if(idx<5){
-                return <div className="SearchForm-result" onClick={()=>addEntry(results.common[idx], meal)}>{result.food_name}<img src={result.photo.thumb} className="SearchForm-image"/></div>
+                return <li className="SearchForm-result list-group-item" onClick={()=>addEntry(results.common[idx], meal)}><img className="rounded SearchForm-image me-1" src={result.photo.thumb}/>{result.food_name}</li>
             }
     });
 
@@ -18,12 +18,12 @@ const SearchForm = ({addEntry, setInput, input, results, setResults, meal, showM
         .slice(0, (results.branded.length<=3 ? results.branded.length : 3)) //Map only the first three items ot the whole array if its <= 3 items
         .map((result,idx)=>{
             if(idx<3){
-                return <div className="SearchForm-result" onClick={()=>addEntry(results.branded[idx], meal)}>{result.food_name} <img src={result.photo.thumb} className="SearchForm-image"/></div>
+                return <li className="SearchForm-result list-group-item" onClick={()=>addEntry(results.branded[idx], meal)}><img src={result.photo.thumb} className="SearchForm-image rounded"/>{result.food_name} </li>
             }
     });
 
     return(
-        <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal className="SearchForm" show={showModal} onHide={handleCloseModal}>
             <Modal.Header className="SearchForm-header" closeButton>
                 <Modal.Title>
                 {meal === 'b' ? <h3>Add a breakfast item</h3> : null}
@@ -37,10 +37,16 @@ const SearchForm = ({addEntry, setInput, input, results, setResults, meal, showM
             <SearchBar setResults={setResults} setInput={setInput} input={input} entryAdded={entryAdded} setEntryAdded={setEntryAdded}/>
                  {results.common[0] || results.branded[0] ? ( <form>
                         <div className="SearchForm-resultwrapper" id="results">
-                            <p>{`COMMON FOODS (${commonResults.length})`}</p>
-                            {commonResults}
-                            <p>{`BRANDED FOODS (${brandedResults.length})`}</p>
-                            {brandedResults}
+                            <div className="fw-bold p-2 result-header">{`COMMON FOODS (${commonResults.length})`}</div>
+                            <ul className="list-group Search-listgroup">
+                                {commonResults}
+                            </ul>
+                            
+                            <div className="fw-bold p-2 result-header">{`BRANDED FOODS (${brandedResults.length})`}</div>
+                            <ul className="list-group Search-listgroup">
+                                {brandedResults}
+                            </ul>
+                            
                         </div>
                     </form>)
                 : null}

@@ -1,5 +1,9 @@
 .SearchForm{
+    font-family: 'Alice';
+}
 
+.SearchForm-header{
+    background-color: #18F2B2;
 }
 
 .SearchForm-image{
@@ -9,13 +13,28 @@
 
 .SearchForm-result{
     text-transform: capitalize;
-    border-bottom: 1px solid black;
-    border-top: 1px solid black;
+}
+
+.SearchForm-result:hover{
+    cursor: pointer;
+    background-color:antiquewhite;
 }
 
 .SearchForm-resultwrapper{
     border: 2px solid black;
-    width:400px;
 
 }
 
+@font-face {
+    font-family: 'Alice';
+    src: url('Alice-Regular.ttf');
+}
+
+.Search-listgroup{
+    border-radius: 0px;
+
+}
+
+.result-header{
+    background-color: #18F2B2;
+}
