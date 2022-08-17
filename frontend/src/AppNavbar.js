@@ -10,12 +10,18 @@ const AppNavbar = ({setLoggedIn, loggedIn, view, setCurrentView})=>{
   const logout = ()=>{
     localStorage.removeItem("accessToken");
     setLoggedIn(false);
+    setCurrentView({view:'homepage'})
   };
 
   return (
     <Navbar className="AppNavBar mb-3" expand='lg'>
       <Container>
-      <Navbar.Brand href="#home" className="Navbar-brand"><i className="fa-solid fa-wheat-awn mx-2"></i>Nutrition Tracker</Navbar.Brand>
+      <Navbar.Brand className="Navbar-brand"
+                    href="#"
+                    onClick={()=>setCurrentView({view:'homepage'})}>
+        <i className="fa-solid fa-wheat-awn mx-2"></i>
+        Nutrition Tracker
+      </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="">
           <Nav variant="tabs" className="me-auto ">

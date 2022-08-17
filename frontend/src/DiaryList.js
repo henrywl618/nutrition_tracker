@@ -15,6 +15,7 @@ const DiaryList = ({response, viewForm, viewDiary, deleteDiary})=>{
             {response && response.map((diary)=>{
                 return <Card className="col-xl-3 col-md-4 col-8 m-3 p-0">
                         <Card.Header className="DiaryList-cardheader">
+                        <i className="fa-solid fa-calendar-days mx-1"></i>
                             {diary.date}
                         </Card.Header>
                         <Card.Body>

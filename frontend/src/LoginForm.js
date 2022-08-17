@@ -30,7 +30,7 @@ const LoginForm = ({setLoggedIn, setCurrentView})=>{
                 localStorage.setItem('accessToken',resp.data.access_token);
                 localStorage.setItem('user',resp.data.user);
                 setLoggedIn(true);
-                setCurrentView({view:"diary"});
+                setCurrentView({view:"mealplan"});
             }
         }
         catch(error){
