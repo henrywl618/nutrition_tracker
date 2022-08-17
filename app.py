@@ -1,5 +1,5 @@
 import os, requests, datetime
-from flask import Flask, request, jsonify 
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, current_user
 from sqlalchemy.exc import IntegrityError, DataError
@@ -9,8 +9,8 @@ NUTRITIONIX_API_HEADERS = {'x-app-id':'cb1063ec',
                            'x-app-key':'fe556ea31678a878f116c76bbd8da68e'}
 SEARCH_URL = 'https://trackapi.nutritionix.com/v2/search/instant'
 
-app = Flask(__name__)
-# Work around for connect SQLAlchemy 1.4.x to Heroku Postgres
+app = Flask(__name__,static_folder='frontend/build')
+# Work around to connect SQLAlchemy 1.4.x to Heroku Postgres
 uri = os.getenv("DATABASE_URL")  # or other relevant config var
 if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
@@ -30,10 +30,14 @@ jwt = JWTManager(app)
 connect_db(app)
 
 @app.route("/")
-def view_homepage():
-    fooditems = Fooditem.query.all()
-    serialized = [fooditem.serialize() for fooditem in fooditems]
-    return jsonify(serialized)
+def serve():
+    """ Serves up React frontend """
+    return send_from_directory(app.static_folder, 'index.html')
+# @app.route("/")
+# def view_homepage():
+#     fooditems = Fooditem.query.all()
+#     serialized = [fooditem.serialize() for fooditem in fooditems]
+#     return jsonify(serialized)
 
 @app.route("/signup", methods=["POST"])
 def signup():
