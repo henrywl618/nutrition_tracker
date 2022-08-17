@@ -9,7 +9,7 @@ NUTRITIONIX_API_HEADERS = {'x-app-id':'cb1063ec',
                            'x-app-key':'fe556ea31678a878f116c76bbd8da68e'}
 SEARCH_URL = 'https://trackapi.nutritionix.com/v2/search/instant'
 
-app = Flask(__name__,static_folder='frontend/build')
+app = Flask(__name__, static_folder='frontend/build', static_url_path='')
 # Work around to connect SQLAlchemy 1.4.x to Heroku Postgres
 uri = os.getenv("DATABASE_URL")  # or other relevant config var
 if uri.startswith("postgres://"):
