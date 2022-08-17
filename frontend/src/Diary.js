@@ -45,7 +45,7 @@ const Diary = ()=>{
     const deleteDiary = async (diaryId)=>{
         try{
             const resp = await axios({method:'delete',
-                                      url:`http://127.0.0.1:5000/diary/${diaryId}`,
+                                      url:`https://nutrition-tracker00.herokuapp.com/diary/${diaryId}`,
                                       headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`},})
             setResponse(resp.data);
         }   
@@ -57,7 +57,7 @@ const Diary = ()=>{
     useEffect(()=>{
         const fetchData = async ()=>{
             const resp = await axios({method:'get',
-                                            url:'http://127.0.0.1:5000/diary',
+                                            url:'https://nutrition-tracker00.herokuapp.com/diary',
                                             headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
                                         })
             setResponse(resp.data);

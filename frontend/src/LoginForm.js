@@ -22,7 +22,7 @@ const LoginForm = ({setLoggedIn, setCurrentView})=>{
         setError("");
         try{
             const resp = await axios({method:"post",
-                                    url:"http://127.0.0.1:5000/login",
+                                    url:"https://nutrition-tracker00.herokuapp.com/login",
                                     headers:{"Content-Type":"application/json"},
                                     data:{username:formData.username,
                                         password:formData.password}})
