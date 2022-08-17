@@ -6,10 +6,11 @@ import SignupForm from './SignupForm';
 import './App.css';
 import Meal from './Meal';
 import UserPage from './UserPage';
+import Homepage from './Homepage';
 
 
 function App() {
-  let [currentView,setCurrentView] = useState({view:"diary"});
+  let [currentView,setCurrentView] = useState({view:"homepage"});
   let [loggedIn, setLoggedIn] = useState(false);
   
   useEffect(()=>{
@@ -24,6 +25,7 @@ function App() {
       {loggedIn && currentView.view === 'diary' && <Diary />}
       {loggedIn && currentView.view === 'mealplan' && <Meal />}
       {loggedIn && currentView.view === 'user' && <UserPage />}
+      {currentView.view === 'homepage' && <Homepage />}
       {!loggedIn && currentView.view === 'signup' &&   <SignupForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
       {!loggedIn && currentView.view === 'login' &&   <LoginForm setLoggedIn={setLoggedIn} setCurrentView={setCurrentView}/>}
     </div>
