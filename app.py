@@ -10,8 +10,11 @@ NUTRITIONIX_API_HEADERS = {'x-app-id':'cb1063ec',
 SEARCH_URL = 'https://trackapi.nutritionix.com/v2/search/instant'
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///xsbmqikfrjrdbk:8de82c65c9f99d83a7ff96c97cd0808de209dd51478966b2a843cf67788b4be4@ec2-54-85-56-210.compute-1.amazonaws.com:5432/d8e8mm16gk36e7'))
+# Work around for connect SQLAlchemy 1.4.x to Heroku Postgres
+uri = os.getenv("DATABASE_URL")  # or other relevant config var
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
