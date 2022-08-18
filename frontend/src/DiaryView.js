@@ -4,6 +4,7 @@ import axios from "axios";
 import "./DiaryView.css";
 import EntryLines from "./EntryLines";
 import { Button } from "react-bootstrap";
+import { hostURL } from "./App";
 
 const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
@@ -31,7 +32,7 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
         if(fooditem.nix_item_id){
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/brand",
+                                                url: `${hostURL}/nutrition/brand`,
                                                 params: {nix_item_id : fooditem.nix_item_id},
                                             })
                 const item=response.data                            
@@ -64,7 +65,7 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
         }else{
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/common",
+                                                url: `${hostURL}/nutrition/common`,
                                                 params: {food_name : fooditem.food_name},
                                             })
                 const item=response.data 
@@ -134,9 +135,9 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
         console.log(saving)
         try{
             const response = await axios({method:'put',
-                                          url:`http://127.0.0.1:5000/diary/${diaryId}`,
+                                          url:`${hostURL}/diary/${diaryId}`,
                                           headers:{"Content-Type":"application/json",                                             
-                                                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
+                                          Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
             const entries = response.data.entries;
             setSaving(false);
@@ -154,7 +155,7 @@ const DiaryView = ({viewDiaryList,diaryId, isLoading, setIsLoading})=>{
     useEffect(()=>{
         const getDiary = async()=>{
             try{
-                const resp = await axios.get(`http://127.0.0.1:5000/diary/${diaryId}`, 
+                const resp = await axios.get(`${hostURL}/diary/${diaryId}`, 
                                             {headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}})
                 const diary = resp.data
                 setDate(diary.date)

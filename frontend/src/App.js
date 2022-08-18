@@ -7,6 +7,7 @@ import './App.css';
 import Meal from './Meal';
 import UserPage from './UserPage';
 import Homepage from './Homepage';
+const hostURL = 'https://nutrition-tracker00.herokuapp.com'
 
 
 function App() {
@@ -32,4 +33,4 @@ function App() {
   );
 }
 
-export default App;
+export {App, hostURL};

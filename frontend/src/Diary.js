@@ -5,6 +5,7 @@ import { useToggleBool } from "./hooks";
 import "./Diary.css";
 import DiaryView from "./DiaryView";
 import DiaryList from "./DiaryList";
+import { hostURL } from "./App";
 
 const Diary = ()=>{
 
@@ -45,7 +46,7 @@ const Diary = ()=>{
     const deleteDiary = async (diaryId)=>{
         try{
             const resp = await axios({method:'delete',
-                                      url:`https://nutrition-tracker00.herokuapp.com/diary/${diaryId}`,
+                                      url:`${hostURL}/diary/${diaryId}`,
                                       headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`},})
             setResponse(resp.data);
         }   
@@ -57,7 +58,7 @@ const Diary = ()=>{
     useEffect(()=>{
         const fetchData = async ()=>{
             const resp = await axios({method:'get',
-                                            url:'https://nutrition-tracker00.herokuapp.com/diary',
+                                            url:`${hostURL}/diary`,
                                             headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
                                         })
             setResponse(resp.data);

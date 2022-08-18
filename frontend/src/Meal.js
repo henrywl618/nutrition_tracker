@@ -4,6 +4,7 @@ import axios from "axios";
 import { useToggleBool } from "./hooks";
 import MealEdit from "./MealEdit";
 import MealList from "./MealList";
+import { hostURL } from "./App";
 
 const Meal = ()=>{
 
@@ -44,7 +45,7 @@ const Meal = ()=>{
     const deleteMeal = async (mealId)=>{
         try{
             const resp = await axios({method:'delete',
-                                      url:`http://127.0.0.1:5000/meal/${mealId}`,
+                                      url:`${hostURL}/meal/${mealId}`,
                                       headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`},})
             setResponse(resp.data);
         }   
@@ -56,7 +57,7 @@ const Meal = ()=>{
     useEffect(()=>{
         const fetchData = async ()=>{
             const resp = await axios({method:'get',
-                                            url:'http://127.0.0.1:5000/meal',
+                                            url:`${hostURL}/meal`,
                                             headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
                                         })
             setResponse(resp.data);

@@ -5,6 +5,7 @@ import axios from "axios";
 import EntryLines from "./EntryLines";
 import { Button } from "react-bootstrap";
 import "./DiaryForm.css";
+import { hostURL } from "./App";
 
 const DiaryForm = ({toggleForm, viewDiaryList})=>{
     let [entries, setEntries] = useState([])
@@ -31,7 +32,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
         if(fooditem.nix_item_id){
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/brand",
+                                                url: `${hostURL}/nutrition/brand`,
                                                 params: {nix_item_id : fooditem.nix_item_id},
                                             })
                 const item=response.data                            
@@ -64,7 +65,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
         }else{
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/common",
+                                                url: `${hostURL}/nutrition/common`,
                                                 params: {food_name : fooditem.food_name},
                                             })
                 const item=response.data 
@@ -142,7 +143,7 @@ const DiaryForm = ({toggleForm, viewDiaryList})=>{
         const json = JSON.stringify({entries:[...entries],date:date,calorie_goal:calorie,user_id:4});
         try{
             const response = await axios({method:'post',
-                                          url:"http://127.0.0.1:5000/diary",
+                                          url:`${hostURL}/diary`,
                                           headers:{"Content-Type":"application/json",
                                                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})

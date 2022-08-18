@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
-import "./SignupForm.css"
+import "./SignupForm.css";
+import { hostURL } from "./App";
 
 const SignupForm = ({setLoggedIn, setCurrentView})=>{
     const emptyFormData = {username:"",
@@ -23,7 +24,7 @@ const SignupForm = ({setLoggedIn, setCurrentView})=>{
         setError("");
         try{
             const resp = await axios({method:"post",
-                                    url:"http://127.0.0.1:5000/signup",
+                                    url:`${hostURL}/signup`,
                                     headers:{"Content-Type":"application/json"},
                                     data:{username:formData.username,
                                         password:formData.password,

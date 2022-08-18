@@ -4,6 +4,7 @@ import axios from "axios";
 import EntryLines from "./EntryLines";
 import DietSelector from "./DietSelector";
 import { Button } from "react-bootstrap";
+import { hostURL } from "./App";
 
 const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     let [entries, setEntries] = useState([])
@@ -33,7 +34,7 @@ const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
         if(fooditem.nix_item_id){
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/brand",
+                                                url: `${hostURL}/nutrition/brand`,
                                                 params: {nix_item_id : fooditem.nix_item_id},
                                             })
                 const item=response.data                            
@@ -66,7 +67,7 @@ const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
         }else{
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/common",
+                                                url: `${hostURL}/nutrition/common`,
                                                 params: {food_name : fooditem.food_name},
                                             })
                 const item=response.data 
@@ -135,7 +136,7 @@ const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
         setSaving(true)
         try{
             const response = await axios({method:'put',
-                                          url:`http://127.0.0.1:5000/meal/${mealId}`,
+                                          url:`${hostURL}/meal/${mealId}`,
                                           headers:{"Content-Type":"application/json",                                             
                                                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})
@@ -164,7 +165,7 @@ const MealEdit = ({viewMealList,mealId, isLoading, setIsLoading})=>{
     useEffect(()=>{
         const getMeal = async()=>{
             try{
-                const resp = await axios.get(`http://127.0.0.1:5000/meal/${mealId}`, 
+                const resp = await axios.get(`${hostURL}/meal/${mealId}`, 
                                             {headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}})
                 const meal = resp.data
                 setTitle(meal.title)

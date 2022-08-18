@@ -1,5 +1,6 @@
 import axios, { Axios } from "axios";
 import React, {useState} from "react";
+import { hostURL } from "./App";
 
 const SearchBar = ({setResults, setInput, input, entryAdded, setEntryAdded})=>{
 
@@ -15,7 +16,7 @@ const SearchBar = ({setResults, setInput, input, entryAdded, setEntryAdded})=>{
         if(input){
             const response = await axios({
                 method: 'get',
-                url: 'http://127.0.0.1:5000/search',
+                url: `${hostURL}/search`,
                 params:{query:input}
             })
             setResults(response.data)

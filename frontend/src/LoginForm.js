@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
+import { hostURL } from "./App";
 
 const LoginForm = ({setLoggedIn, setCurrentView})=>{
     
@@ -22,7 +23,7 @@ const LoginForm = ({setLoggedIn, setCurrentView})=>{
         setError("");
         try{
             const resp = await axios({method:"post",
-                                    url:"https://nutrition-tracker00.herokuapp.com/login",
+                                    url:`${hostURL}/login`,
                                     headers:{"Content-Type":"application/json"},
                                     data:{username:formData.username,
                                         password:formData.password}})

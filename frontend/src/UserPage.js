@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { hostURL } from "./App";
 
 const UserPage = ()=>{
     let [data, setData] = useState(null);
@@ -7,7 +8,7 @@ const UserPage = ()=>{
     useEffect(()=>{
         const fetchData = async ()=>{
             const resp = await axios({method:'get',
-                                    url:'http://127.0.0.1:5000/user',
+                                    url:`${hostURL}/user`,
                                     headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
                                 })
             setData(()=>({...resp.data}));

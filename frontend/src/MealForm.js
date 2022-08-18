@@ -5,6 +5,7 @@ import axios from "axios";
 import EntryLines from "./EntryLines";
 import DietSelector from "./DietSelector";
 import { Button } from "react-bootstrap";
+import { hostURL } from "./App";
 // import "./MealForm.css";
 
 const MealForm = ({toggleForm, viewMealList})=>{
@@ -33,7 +34,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
         if(fooditem.nix_item_id){
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/brand",
+                                                url: `${hostURL}/nutrition/brand`,
                                                 params: {nix_item_id : fooditem.nix_item_id},
                                             })
                 const item=response.data                            
@@ -66,7 +67,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
         }else{
             try{
                 const response = await axios({ method:"get",
-                                                url: "http://127.0.0.1:5000/nutrition/common",
+                                                url: `${hostURL}/nutrition/common`,
                                                 params: {food_name : fooditem.food_name},
                                             })
                 const item=response.data 
@@ -144,7 +145,7 @@ const MealForm = ({toggleForm, viewMealList})=>{
         const json = JSON.stringify({entries:[...entries],title:title,header_image:image,tags:tags});
         try{
             const response = await axios({method:'post',
-                                          url:"http://127.0.0.1:5000/meal",
+                                          url:`${hostURL}/meal`,
                                           headers:{"Content-Type":"application/json",
                                                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`},
                                           data:json})

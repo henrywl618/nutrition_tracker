@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Modal, Button, ModalBody, ModalFooter} from "react-bootstrap";
 import axios from "axios";
 import "./MealPlanModal.css"
+import { hostURL } from "./App";
 
 const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
     let [entries, setEntries] = useState([]);
@@ -26,7 +27,7 @@ const MealPlanModal = ({show, setShow, mealId, editMeal, deleteMeal})=>{
     useEffect(()=>{
         const getMeal = async()=>{
             try{
-                const resp = await axios.get(`http://127.0.0.1:5000/meal/${mealId}`, 
+                const resp = await axios.get(`${hostURL}/meal/${mealId}`, 
                                             {headers:{Authorization: `Bearer ${localStorage.getItem('accessToken')}`}})
                 const meal = resp.data
                 setTitle(meal.title)
