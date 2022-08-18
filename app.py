@@ -1,6 +1,6 @@
 import os, requests, datetime
 from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS,
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, current_user
 from sqlalchemy.exc import IntegrityError, DataError
 from models import db, connect_db, User, Fooditem, Diary, DiaryEntryLine, Mealplan, MealplanEntryLine, Tag, MealplanTag
@@ -40,7 +40,6 @@ def serve():
 #     return jsonify(serialized)
 
 @app.route("/signup", methods=["POST"])
-@cross_origin()
 def signup():
     try:
         new_user = User.signup(
@@ -56,7 +55,6 @@ def signup():
 
 
 @app.route("/login", methods=["POST"])
-@cross_origin()
 def login():
     username = request.json.get("username")
     password = request.json.get("password")
@@ -71,7 +69,6 @@ def login():
 # Register a callback function that takes whatever object is passed in as the
 # identity when creating JWTs and converts it to a JSON serializable format.
 @jwt.user_identity_loader
-@cross_origin()
 def user_identity_lookup(user):
     return user.id
 
@@ -81,14 +78,12 @@ def user_identity_lookup(user):
 # successful lookup, or None if the lookup failed for any reason (for example
 # if the user has been deleted from the database).
 @jwt.user_lookup_loader
-@cross_origin()
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     return User.query.get_or_404(identity)
 
 
 @app.route("/search", methods=['GET'])
-@cross_origin()
 def search():
     """Make an API call to NUTRITIONIX API to get results for search bar"""
     query = request.args.get("query")
@@ -101,7 +96,6 @@ def search():
         print(e)
 
 @app.route("/nutrition/<category>", methods=['GET'])
-@cross_origin()
 def get_nutrition(category):
     """Make an API call to NUTRITIONIX API to get nutrition data for a specific fooditem"""
     if category == 'brand':
@@ -124,7 +118,6 @@ def get_nutrition(category):
             print(e)
 
 @app.route("/diary", methods=['GET'])
-@cross_origin()
 @jwt_required()
 def view_diaries():
     """ Returns a list of all the users diaries """
@@ -135,7 +128,6 @@ def view_diaries():
     return jsonify(serialized_diaries)
 
 @app.route("/diary", methods=['POST'])
-@cross_origin()
 @jwt_required()
 def create_diary():
     """ Creates a new diary for the given user and form data"""
@@ -181,7 +173,6 @@ def create_diary():
         return jsonify(msg="Please enter a valid date")
 
 @app.route("/diary/<int:diary_id>", methods=["GET"])
-@cross_origin()
 @jwt_required()
 def view_diary(diary_id):
     """ Return data for a specific diary """
@@ -195,7 +186,6 @@ def view_diary(diary_id):
         return jsonify(msg="Not authorized"),401
 
 @app.route("/diary/<int:diary_id>", methods=["PUT"])
-@cross_origin()
 @jwt_required()
 def edit_diary(diary_id):
     """ Edits a specific diary """
@@ -243,7 +233,6 @@ def edit_diary(diary_id):
         return jsonify(msg="Not authorized"),401
 
 @app.route("/diary/<int:diary_id>", methods=["DELETE"])
-@cross_origin()
 @jwt_required()
 def delete_diary(diary_id):
     """ Removes a single diary from the database """
@@ -263,7 +252,6 @@ def delete_diary(diary_id):
         return jsonify(msg="Not authorized"),401
 
 @app.route("/meal", methods=['GET'])
-@cross_origin()
 @jwt_required()
 def view_meals():
     """ Returns a list of all mealplans """
@@ -272,7 +260,6 @@ def view_meals():
     return jsonify(serialized_meals)
 
 @app.route("/meal", methods=['POST'])
-@cross_origin()
 @jwt_required()
 def create_meal():
     """ Creates a new meal for the given user and form data"""
@@ -327,7 +314,6 @@ def create_meal():
     #     return jsonify(msg="Error occurred")
 
 @app.route("/meal/<int:meal_id>", methods=["GET"])
-@cross_origin()
 @jwt_required()
 def view_meal(meal_id):
     """ Return data for a specific mealplan """
@@ -338,7 +324,6 @@ def view_meal(meal_id):
     return jsonify({**meal.serialize(),'entries':serialized_entries, 'can_edit':edit_meal, 'posted_by':meal.user.username})
 
 @app.route("/meal/<int:meal_id>", methods=["PUT"])
-@cross_origin()
 @jwt_required()
 def edit_meal(meal_id):
     """ Edits a specific meal """
@@ -400,7 +385,6 @@ def edit_meal(meal_id):
         return jsonify(msg="Not authorized"),401
 
 @app.route("/meal/<int:meal_id>", methods=["DELETE"])
-@cross_origin()
 @jwt_required()
 def delete_meal(meal_id):
     """ Removes a single mealplan from the database """
@@ -420,7 +404,6 @@ def delete_meal(meal_id):
         return jsonify(msg="Not authorized"),401
 
 @app.route("/user", methods=["GET"])
-@cross_origin()
 @jwt_required()
 def view_user():
     """ Returns user information and the mealplans they created """
