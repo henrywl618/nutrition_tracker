@@ -1,6 +1,6 @@
 import os, requests, datetime
 from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS,
+from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, current_user
 from sqlalchemy.exc import IntegrityError, DataError
 from models import db, connect_db, User, Fooditem, Diary, DiaryEntryLine, Mealplan, MealplanEntryLine, Tag, MealplanTag
