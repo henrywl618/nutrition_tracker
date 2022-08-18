@@ -1,46 +1,46 @@
-id,food_name,calorie,protein,fat,carbs,image,brand_item_id,isBrand,serving_size
-1,cereal,105,3,2,21,https://nix-tag-images.s3.amazonaws.com/113_thumb.jpg,"",FALSE,cup
-2,milk,122,8,5,12,https://nix-tag-images.s3.amazonaws.com/377_thumb.jpg,"",FALSE,cup
-3,yogurt,107,9,3,12,https://nix-tag-images.s3.amazonaws.com/186_thumb.jpg,"",FALSE,container (6 oz)
-4,banana,105,1,0,27,https://nix-tag-images.s3.amazonaws.com/399_thumb.jpg,"",FALSE,"medium (7\"" to 7-7/8\"" long)"
-5,peanut butter jelly sandwich,378,12,17,46,https://nix-tag-images.s3.amazonaws.com/2052_thumb.jpg,"",FALSE,sandwich
-6,jalapeno chips,149,2,10,15,https://nix-tag-images.s3.amazonaws.com/120_thumb.jpg,"",FALSE,oz
-7,pasta salad,407,12,24,35,https://nix-tag-images.s3.amazonaws.com/1244_thumb.jpg,,FALSE,cup
-8,penne vodka,545,15,18,75,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,,FALSE,cups
-9,lasagna,602,44,32,35,https://nix-tag-images.s3.amazonaws.com/652_thumb.jpg,,FALSE,serving (about 1.5 cups)
-10,pasta chips,10,0,0,1,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,,FALSE,cracker
-11,wine,122,0,0,4,https://nix-tag-images.s3.amazonaws.com/879_thumb.jpg,,FALSE,glass
-12,strawberries,29,1,0,7,https://nix-tag-images.s3.amazonaws.com/831_thumb.jpg,,FALSE,large
-13,orange,69,1,0,18,https://nix-tag-images.s3.amazonaws.com/719_thumb.jpg,,FALSE,"fruit (2-7/8"" dia)"
-14,kiwis,42,1,0,10,https://nix-tag-images.s3.amazonaws.com/647_thumb.jpg,,FALSE,"fruit (2"" dia)"
-15,watermelon,86,2,0,22,https://nix-tag-images.s3.amazonaws.com/869_thumb.jpg,,FALSE,wedge (approx 1/16 of melon)
-16,cantaloupe,188,5,1,45,https://nix-tag-images.s3.amazonaws.com/451_thumb.jpg,,FALSE,"melon, medium (about 5"" dia)"
-17,honeydew,461,7,2,116,https://nix-tag-images.s3.amazonaws.com/627_thumb.jpg,,FALSE,"melon (6"" - 7"" dia)"
-18,Cinnamon Raisin Swirl Bread,80,2,2,16,https://nutritionix-api.s3.amazonaws.com/5cc2b23a0d53f1b27a836300.jpeg,51c3b7c897c3e6d8d3b44d45,TRUE,slice
-19,peanut butter,188,7,16,8,https://nix-tag-images.s3.amazonaws.com/199_thumb.jpg,,FALSE,tbsp
-20,Grape Jelly,50,0,0,13,https://nutritionix-api.s3.amazonaws.com/60098e1fbd82960b43b05b41.jpeg,54761ec459752938643a8c2d,TRUE,tbsp
-21,egg,72,6,5,0,https://nix-tag-images.s3.amazonaws.com/542_thumb.jpg,,FALSE,large
-22,tea,2,0,0,1,https://nix-tag-images.s3.amazonaws.com/304_thumb.jpg,,FALSE,fl oz
-23,whey protein shake,171,19,9,3,https://nix-tag-images.s3.amazonaws.com/8251_thumb.jpg,,FALSE,bottle
-24,rice,205,4,0,45,https://nix-tag-images.s3.amazonaws.com/784_thumb.jpg,,FALSE,cup
-25,chicken,187,20,11,0,https://nix-tag-images.s3.amazonaws.com/9_thumb.jpg,,FALSE,oz
-26,pork fried rice,324,17,17,25,https://nix-tag-images.s3.amazonaws.com/2175_thumb.jpg,,FALSE,cup
-27,coffee,2,0,0,0,https://nix-tag-images.s3.amazonaws.com/1718_thumb.jpg,,FALSE,cup (8 fl oz)
-28,Quarter Pounder with Cheese,520,30,26,42,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,513fc9e73fe3ffd403001171,TRUE,Serving
-29,small fries,222,2,10,29,https://nix-tag-images.s3.amazonaws.com/9669_thumb.jpg,,FALSE,serving small
-30,coke,140,0,0,39,https://nutritionix-api.s3.amazonaws.com/5c8b5306c397fd0679775147.jpeg,,FALSE,can
-31,pasta carbonara,1018,44,33,133,https://nix-tag-images.s3.amazonaws.com/3587_thumb.jpg,,FALSE,plate (about 3 cups)
-32,iced coffee,2,0,0,0,https://nix-tag-images.s3.amazonaws.com/169_thumb.jpg,,FALSE,cup (8 fl oz)
-33,strawberry,29,1,0,7,https://nix-tag-images.s3.amazonaws.com/831_thumb.jpg,,FALSE,large
-34,gyro,723,48,39,43,https://nix-tag-images.s3.amazonaws.com/3399_thumb.jpg,,FALSE,sandwich
-35,fries,365,4,17,48,https://nix-tag-images.s3.amazonaws.com/564_thumb.jpg,,FALSE,serving medium
-36,chicken teriyaki,174,25,6,3,https://nix-tag-images.s3.amazonaws.com/1357_thumb.jpg,,FALSE,oz
-37,army stew,698,27,48,41,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,,FALSE,bowl (about 2.5 cups)
-38,kimchi,23,2,1,4,https://nix-tag-images.s3.amazonaws.com/1347_thumb.jpg,,FALSE,cup
-39,turkey sandwich,324,21,13,29,https://nix-tag-images.s3.amazonaws.com/1759_thumb.jpg,,FALSE,sandwich
-40,sprite,140,0,0,38,https://nutritionix-api.s3.amazonaws.com/536a68f5a0ec3c690b543205.jpeg,,FALSE,can
-41,sausage,210,8,19,1,https://nix-tag-images.s3.amazonaws.com/800_thumb.jpg,,FALSE,"link (4"" long x 1-1/8"" dia)"
-42,sushi,349,8,19,38,https://nix-tag-images.s3.amazonaws.com/1719_thumb.jpg,,FALSE,roll (8 pieces)
-43,miso soup,59,6,3,4,https://nix-tag-images.s3.amazonaws.com/2433_thumb.jpg,,FALSE,cup
-44,sake,234,1,0,9,https://nix-tag-images.s3.amazonaws.com/2140_thumb.jpg,,FALSE,fl oz
-45,pizza,285,12,10,36,https://nix-tag-images.s3.amazonaws.com/1060_thumb.jpg,,FALSE,slice
+food_name,calorie,protein,fat,carbs,image,brand_item_id,isBrand,serving_size
+cereal,105,3,2,21,https://nix-tag-images.s3.amazonaws.com/113_thumb.jpg,"",FALSE,cup
+milk,122,8,5,12,https://nix-tag-images.s3.amazonaws.com/377_thumb.jpg,"",FALSE,cup
+yogurt,107,9,3,12,https://nix-tag-images.s3.amazonaws.com/186_thumb.jpg,"",FALSE,container (6 oz)
+banana,105,1,0,27,https://nix-tag-images.s3.amazonaws.com/399_thumb.jpg,"",FALSE,"medium (7\"" to 7-7/8\"" long)"
+peanut butter jelly sandwich,378,12,17,46,https://nix-tag-images.s3.amazonaws.com/2052_thumb.jpg,"",FALSE,sandwich
+jalapeno chips,149,2,10,15,https://nix-tag-images.s3.amazonaws.com/120_thumb.jpg,"",FALSE,oz
+pasta salad,407,12,24,35,https://nix-tag-images.s3.amazonaws.com/1244_thumb.jpg,,FALSE,cup
+penne vodka,545,15,18,75,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,,FALSE,cups
+lasagna,602,44,32,35,https://nix-tag-images.s3.amazonaws.com/652_thumb.jpg,,FALSE,serving (about 1.5 cups)
+pasta chips,10,0,0,1,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,,FALSE,cracker
+wine,122,0,0,4,https://nix-tag-images.s3.amazonaws.com/879_thumb.jpg,,FALSE,glass
+strawberries,29,1,0,7,https://nix-tag-images.s3.amazonaws.com/831_thumb.jpg,,FALSE,large
+orange,69,1,0,18,https://nix-tag-images.s3.amazonaws.com/719_thumb.jpg,,FALSE,"fruit (2-7/8"" dia)"
+kiwis,42,1,0,10,https://nix-tag-images.s3.amazonaws.com/647_thumb.jpg,,FALSE,"fruit (2"" dia)"
+watermelon,86,2,0,22,https://nix-tag-images.s3.amazonaws.com/869_thumb.jpg,,FALSE,wedge (approx 1/16 of melon)
+cantaloupe,188,5,1,45,https://nix-tag-images.s3.amazonaws.com/451_thumb.jpg,,FALSE,"melon, medium (about 5"" dia)"
+honeydew,461,7,2,116,https://nix-tag-images.s3.amazonaws.com/627_thumb.jpg,,FALSE,"melon (6"" - 7"" dia)"
+Cinnamon Raisin Swirl Bread,80,2,2,16,https://nutritionix-api.s3.amazonaws.com/5cc2b23a0d53f1b27a836300.jpeg,51c3b7c897c3e6d8d3b44d45,TRUE,slice
+peanut butter,188,7,16,8,https://nix-tag-images.s3.amazonaws.com/199_thumb.jpg,,FALSE,tbsp
+Grape Jelly,50,0,0,13,https://nutritionix-api.s3.amazonaws.com/60098e1fbd82960b43b05b41.jpeg,54761ec459752938643a8c2d,TRUE,tbsp
+egg,72,6,5,0,https://nix-tag-images.s3.amazonaws.com/542_thumb.jpg,,FALSE,large
+tea,2,0,0,1,https://nix-tag-images.s3.amazonaws.com/304_thumb.jpg,,FALSE,fl oz
+whey protein shake,171,19,9,3,https://nix-tag-images.s3.amazonaws.com/8251_thumb.jpg,,FALSE,bottle
+rice,205,4,0,45,https://nix-tag-images.s3.amazonaws.com/784_thumb.jpg,,FALSE,cup
+chicken,187,20,11,0,https://nix-tag-images.s3.amazonaws.com/9_thumb.jpg,,FALSE,oz
+pork fried rice,324,17,17,25,https://nix-tag-images.s3.amazonaws.com/2175_thumb.jpg,,FALSE,cup
+coffee,2,0,0,0,https://nix-tag-images.s3.amazonaws.com/1718_thumb.jpg,,FALSE,cup (8 fl oz)
+Quarter Pounder with Cheese,520,30,26,42,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,513fc9e73fe3ffd403001171,TRUE,Serving
+small fries,222,2,10,29,https://nix-tag-images.s3.amazonaws.com/9669_thumb.jpg,,FALSE,serving small
+coke,140,0,0,39,https://nutritionix-api.s3.amazonaws.com/5c8b5306c397fd0679775147.jpeg,,FALSE,can
+pasta carbonara,1018,44,33,133,https://nix-tag-images.s3.amazonaws.com/3587_thumb.jpg,,FALSE,plate (about 3 cups)
+iced coffee,2,0,0,0,https://nix-tag-images.s3.amazonaws.com/169_thumb.jpg,,FALSE,cup (8 fl oz)
+strawberry,29,1,0,7,https://nix-tag-images.s3.amazonaws.com/831_thumb.jpg,,FALSE,large
+gyro,723,48,39,43,https://nix-tag-images.s3.amazonaws.com/3399_thumb.jpg,,FALSE,sandwich
+fries,365,4,17,48,https://nix-tag-images.s3.amazonaws.com/564_thumb.jpg,,FALSE,serving medium
+chicken teriyaki,174,25,6,3,https://nix-tag-images.s3.amazonaws.com/1357_thumb.jpg,,FALSE,oz
+army stew,698,27,48,41,https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png,,FALSE,bowl (about 2.5 cups)
+kimchi,23,2,1,4,https://nix-tag-images.s3.amazonaws.com/1347_thumb.jpg,,FALSE,cup
+turkey sandwich,324,21,13,29,https://nix-tag-images.s3.amazonaws.com/1759_thumb.jpg,,FALSE,sandwich
+sprite,140,0,0,38,https://nutritionix-api.s3.amazonaws.com/536a68f5a0ec3c690b543205.jpeg,,FALSE,can
+sausage,210,8,19,1,https://nix-tag-images.s3.amazonaws.com/800_thumb.jpg,,FALSE,"link (4"" long x 1-1/8"" dia)"
+sushi,349,8,19,38,https://nix-tag-images.s3.amazonaws.com/1719_thumb.jpg,,FALSE,roll (8 pieces)
+miso soup,59,6,3,4,https://nix-tag-images.s3.amazonaws.com/2433_thumb.jpg,,FALSE,cup
+sake,234,1,0,9,https://nix-tag-images.s3.amazonaws.com/2140_thumb.jpg,,FALSE,fl oz
+pizza,285,12,10,36,https://nix-tag-images.s3.amazonaws.com/1060_thumb.jpg,,FALSE,slice
