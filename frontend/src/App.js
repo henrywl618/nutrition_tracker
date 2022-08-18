@@ -18,7 +18,7 @@ function App() {
     if(localStorage.getItem('accessToken')){
       setLoggedIn(true)
     }
-  });
+  },[]);
 
   return (
     <div className="App">
@@ -33,4 +33,5 @@ function App() {
   );
 }
 
-export {App, hostURL};
+export default App;
+export {hostURL};

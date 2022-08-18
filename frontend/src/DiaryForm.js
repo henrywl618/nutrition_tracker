@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import SearchForm from "./SearchForm";
-import QuantitySelector from "./QuantitySelector";
 import axios from "axios";
 import EntryLines from "./EntryLines";
 import { Button } from "react-bootstrap";
