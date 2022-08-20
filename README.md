@@ -20,7 +20,7 @@ Users can also create mealplans to easily plan out their day/week. Users can als
 ## **Features**
 - Search for over 900,000+ food items
 - Track your total daily calorie, protein, carbohydrate and fat intake
-- Create a diary and add as you eat through ou the day
+- Create a diary and add as you eat through out the day
 - Create a own mealplan to easily plan out your day/week
 - View mealplans created by others
 - Edit/Delete any diary or mealplan you created
