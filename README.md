@@ -6,6 +6,16 @@ Nutrition Tracker was created to allow users to easily log their daily food inta
 
 Users can also create mealplans to easily plan out their day/week. Users can also view and follow a mealplan created by others!
 
+*Track you daily nutrition intake*
+![image1](frontend/src/img/homepage2.png)  
+
+*Plan out your day by creating and viewing mealplans!*
+![image1](frontend/src/img/homepage4.png)
+![image1](frontend/src/img/homepage5.png)
+
+*Search for food items to add!*
+![image2](/frontend/src/img/homepage1.png)
+
 ## **Features**
 - Search for over 900,000+ food items
 - Track your total daily calorie, protein, carbohydrate and fat intake
