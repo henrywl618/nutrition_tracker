@@ -12,6 +12,8 @@ Users can also create mealplans to easily plan out their day/week. Users can als
 
 >*Plan out your day by creating and viewing mealplans!*
 >![image1](frontend/src/img/homepage4.png)
+
+>*View mealplans created by others*
 >![image1](frontend/src/img/homepage5.png)
 
 >*Search for food items to add!*
